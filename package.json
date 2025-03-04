@@ -1,11 +1,11 @@
 {
   "name": "foodieflow",
   "version": "1.0.0",
-  "main": "Full stack food ordering applicaiton",
+  "main": "Full stack food ordering application",
   "scripts": {
     "client": "cd client && npm run dev",
     "server": "cd server && npm run dev",
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "dev": "concurrently \"npm run server\" \"npm run client\" --names \"Server,Client\" --prefix-colors \"blue,yellow\" --kill-others-on-fail",
     "install-all": "npm install && cd client && npm install && cd ../server && npm install"
   },
   "devDependencies": {

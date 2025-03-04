@@ -1,5 +1,5 @@
 @import 'tailwindcss';
-
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 @plugin 'tailwindcss-animate';
 
 @custom-variant dark (&:is(.dark *));
@@ -9,6 +9,10 @@
   --font-mono: var(--font-geist-mono);
 }
 
+* {
+  box-sizing: border-box;
+  font-family: Outfit;
+}
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
