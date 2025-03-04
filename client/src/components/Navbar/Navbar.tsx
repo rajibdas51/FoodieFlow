@@ -4,15 +4,22 @@ import React from 'react';
 
 const Navbar = () => {
   return (
-    <div className='container my-[50px] py-6  bg-amber-500'>
-      <div className=' flex justify-between items-center  border-b-2 '>
+    <div className='container  mx-auto '>
+      <div className='py-5 flex justify-between items-center  border-b-2 '>
         {/* Logo section */}
         <div className='flex-1'>
-          <h1 className='text-xl font-bold py-6'>FoodieFlow</h1>
+          <Image
+            src={assets.logo}
+            alt='FoodieFlow logo'
+            width={0}
+            height={0}
+            className='w-50'
+            quality={100}
+          />
         </div>
 
         {/* Navigation links - centered */}
-        <ul className='flex flex-row gap-4 justify-center space-x-8 py-6'>
+        <ul className='flex flex-row gap-4 justify-center space-x-8 py-10'>
           <li className='cursor-pointer hover:text-orange-500 transition-colors'>
             Home
           </li>

@@ -3,6 +3,7 @@ import { StaticImageData } from 'next/image';
 // Import all images
 import basket_icon from './basket_icon.png';
 import logo from './logo.png';
+import heroBg from './hero-bg.png';
 import header_img from './header_img.png';
 import search_icon from './search_icon.png';
 import menu_1 from './menu_1.png';
@@ -66,6 +67,7 @@ import parcel_icon from './parcel_icon.png';
 // Define asset types
 interface Assets {
   logo: StaticImageData;
+  heroBg: StaticImageData;
   basket_icon: StaticImageData;
   header_img: StaticImageData;
   search_icon: StaticImageData;
@@ -103,6 +105,7 @@ interface FoodItem {
 // Export the assets
 export const assets: Assets = {
   logo,
+  heroBg,
   basket_icon,
   header_img,
   search_icon,
