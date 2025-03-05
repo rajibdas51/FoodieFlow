@@ -14,7 +14,7 @@ const Navbar = () => {
 
   return (
     <div className='container  mx-auto '>
-      <div className='py-5 flex justify-between items-center  border-b-2 '>
+      <div className='py-5 flex justify-between items-center   '>
         {/* Logo section */}
         <div className='flex-1'>
           <Image
@@ -34,7 +34,7 @@ const Navbar = () => {
               key={item.name}
               className={`cursor-pointer hover:text-orange-500 transition-colors ${
                 item.name === activeMenu
-                  ? 'text-orange-500 border-b-2 border-b-orange-500 transition-all'
+                  ? 'text-white border-b-2 border-b-white transition-all'
                   : ''
               }`}
               onClick={() => setActiveMenu(item.name)}
@@ -61,8 +61,8 @@ const Navbar = () => {
               height={24}
               className='cursor-pointer'
             />
-            <div className='dot absolute min-w-2.5 min-h-2.5 bg-orange-500 rounded-md top-[-8px] left-3'></div>
-            <button className='px-4 py-2  text-gray-800 rounded-[20px] border border-orange-500 hover:bg-orange-500 hover:text-white transition-colors'>
+            <div className='dot absolute min-w-2.5 min-h-2.5 bg-orange-700 rounded-md top-[-8px] left-3'></div>
+            <button className='px-4 py-2 font-bold text-gray-800 rounded-[20px]   bg-white  hover:bg-orange-800 hover:text-white transition-colors'>
               Sign in
             </button>
           </div>
