@@ -131,3 +131,19 @@
     @apply bg-background text-foreground;
   }
 }
+/* hero slider css*/
+.swiper-button-prev:after,
+.swiper-rtl .swiper-button-next:after {
+  content: 'prev';
+  color: black;
+}
+.swiper-button-next:after,
+.swiper-rtl .swiper-button-prev:after {
+  content: 'next';
+  color: black;
+}
+.swiper-pagination-bullet-active {
+  margin-top: 20px;
+  opacity: var(--swiper-pagination-bullet-opacity, 1);
+  background: black !important;
+}
