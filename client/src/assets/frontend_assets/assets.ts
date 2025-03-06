@@ -88,11 +88,6 @@ interface Assets {
   parcel_icon: StaticImageData;
 }
 
-interface MenuItem {
-  menu_name: string;
-  menu_image: StaticImageData;
-}
-
 interface FoodItem {
   _id: string;
   name: string;
@@ -126,6 +121,10 @@ export const assets: Assets = {
   parcel_icon,
 };
 
+interface MenuItem {
+  menu_name: string;
+  menu_image: StaticImageData;
+}
 export const menu_list: MenuItem[] = [
   {
     menu_name: 'Salad',

@@ -25,9 +25,9 @@ module.exports = {
       },
       // Optional: Add custom spacing, typography, etc.
       spacing: {
-        '128': '32rem', // Example custom spacing
+        128: '32rem', // Example custom spacing
       },
     },
   },
-  plugins: [],
+  plugins: [import('tailwind-scrollbar-hide')],
 };

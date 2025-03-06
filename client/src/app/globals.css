@@ -13,6 +13,22 @@
   box-sizing: border-box;
   font-family: Outfit;
 }
+html,
+body {
+  overflow-x: hidden;
+  scrollbar: hidden;
+}
+html,
+body {
+  overflow-y: scroll; /* Allows scrolling */
+  scrollbar-width: none; /* Firefox */
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -146,4 +162,8 @@
   margin-top: 20px;
   opacity: var(--swiper-pagination-bullet-opacity, 1);
   background: black !important;
+}
+
+explore-menu-list::-webkit-scrollbar {
+  display: none !important;
 }

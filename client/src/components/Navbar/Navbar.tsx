@@ -32,7 +32,7 @@ const Navbar = () => {
           {menuItems.map((item) => (
             <li
               key={item.name}
-              className={`cursor-pointer hover:text-orange-500 transition-colors ${
+              className={`cursor-pointer hover:text-white transition-colors ${
                 item.name === activeMenu
                   ? 'text-white border-b-2 border-b-white transition-all'
                   : ''
