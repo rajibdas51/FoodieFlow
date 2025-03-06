@@ -1,7 +1,13 @@
 import React from 'react';
 import { menu_list } from '@/assets/frontend_assets/assets';
 import Image from 'next/image';
-const ExploreMenu = () => {
+
+interface ExploreMenuProps {
+  category: string;
+  setCategory: (category: string) => void;
+}
+
+const ExploreMenu: React.FC<ExploreMenuProps> = ({ category, setCategory }) => {
   return (
     <div>
       <div
@@ -21,7 +27,11 @@ const ExploreMenu = () => {
         <div className='explore-menu-list flex justify-between items-center gap-7 my-5 overflow-x-scroll scrollbar-hide '>
           {menu_list.map((menu, index) => {
             return (
-              <div key={index} className='items-center justify-center'>
+              <div
+                onClick={() => setCategory(menu.menu_name)}
+                key={index}
+                className='items-center justify-center cursor-pointer'
+              >
                 <div className=' items-center justify-center'>
                   <Image
                     src={menu.menu_image}
@@ -30,7 +40,12 @@ const ExploreMenu = () => {
                     alt={menu.menu_name}
                     objectFit='contain'
                     quality={100}
-                    className='md:w-[7.5vw] min-w-[80px] w-[15vw] cursor-pointer rounded-md'
+                    className={`${
+                      category === menu.menu_name
+                        ? 'active p-1  border-4 border-orange-500 md:w-[7.5vw] min-w-[80px] w-[15vw] cursor-pointer rounded-[50%]'
+                        : 'md:w-[7.5vw] min-w-[80px] w-[15vw] cursor-pointer rounded-[50%]'
+                    } `}
+                    onClick={() => setCategory(menu.menu_name)}
                   />
                 </div>
                 <div className=' flex items-center justify-center py-3'>
