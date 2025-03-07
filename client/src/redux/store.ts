@@ -1,9 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
 import foodSlice from './slices/foodSlice';
-
+import loaderSlice from './slices/loaderSlice';
 const store = configureStore({
   reducer: {
     food: foodSlice,
+    loader: loaderSlice,
   },
 });
 

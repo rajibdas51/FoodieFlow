@@ -18,7 +18,7 @@ const ExploreMenu: React.FC<ExploreMenuProps> = ({ category, setCategory }) => {
           <h1 className='text-gray-800 font-bold text-2xl  lg:text-5xl'>
             Explore Menu
           </h1>
-          <p className='px-2 text-center py-3 lg:max-w-[60%] md:pt-6 text-gray-700 items-center justify-center'>
+          <p className='px-2 text-center text-xl py-3 lg:max-w-[60%] md:pt-6 text-gray-700 items-center justify-center'>
             Explore our menu and discover delicious dishes for every craving.
             From appetizers to desserts, order your favorites with ease!
           </p>
