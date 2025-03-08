@@ -1,6 +1,9 @@
 import { assets } from '@/assets/frontend_assets/assets';
+import { RootState } from '@/redux/store';
+import { addToCart, removeFromCart } from '@/redux/slices/cartSlice';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 interface FoodItemProps {
   _id: string;
@@ -9,18 +12,32 @@ interface FoodItemProps {
   image: string;
   price: number;
 }
+
 const FoodItem: React.FC<FoodItemProps> = ({
+  _id,
   name,
   description,
   image,
   price,
 }) => {
-  const [itemCount, setItemCount] = useState(0);
+  const dispatch = useDispatch();
+  const cartItems = useSelector((state: RootState) => state.cart.cartItems);
+  const itemCount = cartItems[_id] || 0;
+
+  // handleAddToCart function
+  const handleAddToCart = () => {
+    dispatch(addToCart(_id));
+  };
+
+  // handleRemoveFromCart function
+  const handleRemoveFromCart = () => {
+    dispatch(removeFromCart(_id));
+  };
   return (
-    <div className=' w-[100%] rounded-[15px] shadaow-md transition duration-300 ease-in-out transform hover:scale-105 px-4 md:px-0'>
+    <div className='w-[100%] rounded-[15px] shadow-md transition duration-300 ease-in-out transform hover:scale-105 px-4 md:px-0'>
       <div className='relative'>
         <Image
-          className='w-full rounded-t-[20px] md:rounded-t-2xl  '
+          className='w-full rounded-t-[20px] md:rounded-t-2xl'
           src={image}
           alt={name}
           width={500}
@@ -30,7 +47,7 @@ const FoodItem: React.FC<FoodItemProps> = ({
         {!itemCount ? (
           <Image
             src={assets.add_icon_white}
-            onClick={() => setItemCount((prev) => prev + 1)}
+            onClick={handleAddToCart}
             width={100}
             height={100}
             alt=''
@@ -41,7 +58,7 @@ const FoodItem: React.FC<FoodItemProps> = ({
           <div className='absolute bottom-[15px] right-[15px] flex items-center gap-[10px] p-[6px] rounded-[50px] bg-white justify-center'>
             <Image
               src={assets.remove_icon_red}
-              onClick={() => setItemCount((prev) => prev - 1)}
+              onClick={handleRemoveFromCart}
               width={100}
               height={100}
               alt=''
@@ -51,7 +68,7 @@ const FoodItem: React.FC<FoodItemProps> = ({
             <p>{itemCount}</p>
             <Image
               src={assets.add_icon_green}
-              onClick={() => setItemCount((prev) => prev + 1)}
+              onClick={handleAddToCart}
               width={100}
               height={100}
               alt=''
@@ -65,7 +82,7 @@ const FoodItem: React.FC<FoodItemProps> = ({
         <div className='flex justify-between items-center mb-3'>
           <p className='text-xl font-bold'>{name}</p>
           <Image
-            className='w-[70px] '
+            className='w-[70px]'
             src={assets.rating_starts}
             alt=''
             width={100}
@@ -73,7 +90,7 @@ const FoodItem: React.FC<FoodItemProps> = ({
           />
         </div>
         <p className='text-gray-800 text-lg'>{description}</p>
-        <p className='text-[22px] font-bold my-2 text-orange-500'>${price} </p>
+        <p className='text-[22px] font-bold my-2 text-orange-500'>${price}</p>
       </div>
     </div>
   );
