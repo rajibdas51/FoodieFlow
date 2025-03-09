@@ -3,12 +3,16 @@ import foodSlice from './slices/foodSlice';
 import loaderSlice from './slices/loaderSlice';
 import cartSlice from './slices/cartSlice';
 
-const store = configureStore({
+export const store = configureStore({
   reducer: {
     food: foodSlice,
     loader: loaderSlice,
     cart: cartSlice,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
