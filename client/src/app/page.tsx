@@ -5,7 +5,7 @@ import Hero from '@/components/Header/Hero';
 import { useState } from 'react';
 
 export default function Home() {
-  const [category, setCategory] = useState('all');
+  const [category, setCategory] = useState('All');
 
   return (
     <div>

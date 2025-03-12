@@ -8,7 +8,7 @@ interface FoodDisplayProps {
   category?: string;
 }
 
-const FoodDisplay: React.FC<FoodDisplayProps> = ({}) => {
+const FoodDisplay: React.FC<FoodDisplayProps> = ({ category }) => {
   const foodList = useSelector((state: RootState) => state.food.foodList);
 
   return (
@@ -18,9 +18,11 @@ const FoodDisplay: React.FC<FoodDisplayProps> = ({}) => {
           Top dishes near you
         </h2>
         <div className='grid grid-cols-1 gap-4 mx-auto items-center justify-center sm:grid-cols-2 lg:grid-cols-4 mt-16'>
-          {foodList.map((food, index) => (
-            <FoodItem key={index} {...food} image={food.image.src} />
-          ))}
+          {foodList.map((food, index) => {
+            if (category === 'All' || category === food.category) {
+              return <FoodItem key={index} {...food} image={food.image.src} />;
+            }
+          })}
         </div>
       </div>
     </div>
