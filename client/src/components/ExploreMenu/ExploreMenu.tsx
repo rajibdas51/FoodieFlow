@@ -9,7 +9,7 @@ interface ExploreMenuProps {
 
 const ExploreMenu: React.FC<ExploreMenuProps> = ({ category, setCategory }) => {
   return (
-    <div>
+    <div id='explore-menu'>
       <div
         className='container mx-auto flex flex-col gap:20px mt-[40px] lg:-mt-15 '
         id='explore-menu'
