@@ -21,7 +21,7 @@ const AppDownload = () => {
           width={100}
           height={100}
           quality={100}
-          className='w-[150px] max-w-[180px] cursor-pointer'
+          className='w-[150px] max-w-[180px] cursor-pointer hover:scale-105 transition-all duration-300'
         />
         <Image
           src={assets.app_store}
@@ -29,7 +29,7 @@ const AppDownload = () => {
           width={100}
           height={100}
           quality={100}
-          className='w-[150px] max-w-[180px] cursor-pointer'
+          className='w-[150px] max-w-[180px] cursor-pointer hover:scale-105 transition-all duration-300'
         />
       </div>
     </div>

@@ -2,7 +2,7 @@
 import AppDownload from '@/components/AppDownload/AppDownload';
 import ExploreMenu from '@/components/ExploreMenu/ExploreMenu';
 import FoodDisplay from '@/components/FoodDisplay/FoodDisplay';
-import Hero from '@/components/Header/Hero';
+import Hero from '@/components/Hero/Hero';
 import { useState } from 'react';
 
 export default function Home() {
