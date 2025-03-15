@@ -14,7 +14,7 @@ import { FaLocationDot, FaX } from 'react-icons/fa6';
 const Footer = () => {
   return (
     <footer className='bg-gray-800 border-t'>
-      <div className='container  mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5  justify-center gap-8'>
+      <div className='container  mx-auto px-6 md:px-4 py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5  justify-center gap-8'>
         <div className=' mx-auto'>
           <Link href='/' className=' pb-4'>
             <Image
@@ -48,7 +48,7 @@ const Footer = () => {
             </Link>
           </div>
         </div>
-        <div id='our-menus' className='mx-auto'>
+        <div id='our-menus' className='md:mx-auto'>
           <h3 className='font-semibold text-xl mb-4 text-gray-300 '>
             Our Menus
           </h3>
@@ -120,7 +120,7 @@ const Footer = () => {
             </li>
           </ul>
         </div>
-        <div className='mx-auto'>
+        <div className='md:mx-auto'>
           <h3 className='font-semibold text-xl mb-4 text-gray-300 '>
             Quick Links
           </h3>
@@ -160,7 +160,7 @@ const Footer = () => {
           </ul>
         </div>
 
-        <div className=' mx-auto'>
+        <div className=' md:mx-auto'>
           <div>
             <h3 className='font-semibold mb-4 text-gray-300 text-xl'>
               Contact Us
@@ -191,7 +191,7 @@ const Footer = () => {
             </div>
           </div>
         </div>
-        <div className=' mx-auto'>
+        <div className=' md:mx-auto'>
           <div>
             <h3 className='font-semibold text-xl mb-4 text-gray-300 '>
               Newsletter
