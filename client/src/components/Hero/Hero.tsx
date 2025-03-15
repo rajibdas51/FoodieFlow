@@ -23,7 +23,7 @@ const Hero = () => {
           </button>
         </div>
         {/* image slider */}
-        <div className='md:w-1/2 px-8'>
+        <div className='md:w-1/2 px-8 hidden md:block'>
           <ImageSlider />
         </div>
       </div>
