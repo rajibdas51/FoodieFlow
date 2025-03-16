@@ -38,7 +38,9 @@ const Navbar = () => {
   return (
     <div
       className={`w-full ${
-        isSticky ? 'fixed top-0 left-0 right-0 shadow-md z-30 bg-white' : ''
+        isSticky
+          ? 'fixed top-0 left-0 right-0 shadow-md z-30 bg-white transition-all '
+          : ''
       }`}
     >
       <div
@@ -48,7 +50,11 @@ const Navbar = () => {
             : 'bg-white md:bg-transparent'
         }`}
       >
-        <div className='py-5 flex justify-between items-center'>
+        <div
+          className={` ${
+            isSticky ? 'py-2' : 'py-5'
+          } flex justify-between items-center`}
+        >
           {/* Hamburger menu - only on mobile */}
           <div className='md:hidden flex pl-2 w-1/5'>
             <button onClick={toggleMobileMenu} className='focus:outline-none'>
