@@ -88,7 +88,7 @@ const Navbar = () => {
           </div>
 
           {/* Navigation links - desktop */}
-          <ul className='hidden md:flex text-[18px] flex-row text-gray-800 list-none gap-5 justify-center space-x-8'>
+          <ul className='hidden lg:flex text-[18px] flex-row text-gray-800 list-none gap-5 justify-center space-x-8'>
             {menuItems.map((item) => (
               <li
                 key={item.name}
