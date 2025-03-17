@@ -15,7 +15,7 @@ const ExploreMenu: React.FC<ExploreMenuProps> = ({ category, setCategory }) => {
   return (
     <div id='explore-menu'>
       <div
-        className='container mx-auto flex flex-col gap:20px mt-[40px] lg:-mt-15'
+        className='container mx-auto flex flex-col gap:20px mt-[80px] lg:-mt-15'
         id='explore-menu'
       >
         <div className='flex flex-col items-center justify-center my-10'>

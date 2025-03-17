@@ -10,7 +10,11 @@ const menuItems = [
   { name: 'Contact us', url: '/contact-us' },
 ];
 
-const Navbar = () => {
+interface NavbarProps {
+  setShowLogin: (show: boolean) => void;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ setShowLogin }) => {
   const [activeMenu, setActiveMenu] = useState('Home');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
@@ -134,7 +138,10 @@ const Navbar = () => {
                 className='cursor-pointer'
               />
               <div className='dot absolute min-w-2.5 min-h-2.5 bg-orange-700 rounded-md top-[-8px] left-3'></div>
-              <button className='px-4 py-2 font-bold text-gray-800 rounded-[20px] bg-white md:hover:bg-orange-800 hover:bg-orange-500 hover:text-white transition-colors border-2 border-orange-500'>
+              <button
+                onClick={() => setShowLogin(true)}
+                className='px-4 py-2 font-bold text-gray-800 rounded-[20px] bg-white md:hover:bg-orange-800 hover:bg-orange-500 hover:text-white transition-colors border-2 border-orange-500'
+              >
                 Sign in
               </button>
             </div>
