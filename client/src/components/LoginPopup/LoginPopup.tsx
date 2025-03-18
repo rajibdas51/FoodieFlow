@@ -8,10 +8,10 @@ interface LoginPopupProps {
 const LoginPopup: React.FC<LoginPopupProps> = ({ setShowLogin }) => {
   const [currentState, setCurrentState] = useState('Sign Up');
   return (
-    <div className='login-popup absolute bg-[#00000090] flex w-full h-full z-50'>
+    <div className='fixed inset-0  bg-[#00000090] flex w-full h-full z-[999]'>
       <form
         action=''
-        className='login-popup-container bg-white rounded-md place-self-center items-center justify-center mx-auto w-[330px] text-[#808080] flex flex-col gap-6 py-8 px-3 relative animate-fade-in'
+        className=' bg-white rounded-md place-self-center items-center justify-center mx-auto w-[330px] text-[#808080] flex flex-col gap-6 py-8 px-3 relative animate-fade-in'
       >
         <div className='login-popup-title'>
           <h2 className='text-2xl font-semibold text-gray-800'>
@@ -23,7 +23,7 @@ const LoginPopup: React.FC<LoginPopupProps> = ({ setShowLogin }) => {
             height={100}
             src={assets.cross_icon}
             alt=''
-            className='absolute top-3 right-3 w-5'
+            className='absolute top-3 right-3 w-5 cursor-pointer'
           />
         </div>
         <div className='w-full flex flex-col  items-center justify-center mx-auto gap-6 '>
