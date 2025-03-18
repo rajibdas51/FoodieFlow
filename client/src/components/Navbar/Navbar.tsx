@@ -4,6 +4,7 @@ import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { toggleAuthModal } from '@/redux/slices/authSlice';
+import { useRouter } from 'next/navigation';
 const menuItems = [
   { name: 'Home', url: '/' },
   { name: 'Menu', url: '/menu' },
@@ -16,6 +17,7 @@ const Navbar = () => {
   const [activeMenu, setActiveMenu] = useState('Home');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
+  const router = useRouter();
 
   // Handle scroll event to make navbar sticky
   useEffect(() => {
@@ -137,6 +139,7 @@ const Navbar = () => {
                 width={24}
                 height={24}
                 className='cursor-pointer'
+                onClick={() => router.push('/cart')}
               />
               <div className='dot absolute min-w-2.5 min-h-2.5 bg-orange-700 rounded-md top-[-8px] left-3'></div>
               <button
