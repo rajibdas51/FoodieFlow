@@ -12,7 +12,7 @@ const CartPage = () => {
   return (
     <div className='container mx-auto'>
       <div className='cart mt-[100px]'>
-        <div className='cart-items'>
+        <div className='cart-items px-1'>
           <div className='cart-items-title grid grid-cols-6 gap-4 items-center text-center text-gray-600 font-semibold'>
             <p>Items</p>
             <p>Title</p>
@@ -56,6 +56,49 @@ const CartPage = () => {
               }
             }
           })}
+        </div>
+        {/*-------cart bottom--------*/}
+        <div className='mt-[80px] flex  flex-col-reverse md:flex-row  justify-between gap-20  mb-6 lg:mb-10'>
+          <div className='w-full md:w-2/3 flex flex-col gap-5 px-2 md:px-2'>
+            <h2 className='text-2xl font-bold'>Cart Totals</h2>
+            <div className='flex flex-col gap-4'>
+              <div className='flex justify-between text-gray-600'>
+                <p>Subtotal</p>
+                <p>{0}</p>
+              </div>
+              <hr />
+              <div className='flex justify-between text-gray-600'>
+                <p>Delivery Fee</p>
+                <p>{2}</p>
+              </div>
+              <hr />
+
+              <div className='flex justify-between text-gray-600'>
+                <p>Total</p>
+                <p>{0}</p>
+              </div>
+              <hr />
+
+              <button className='text-white bg-orange-500 w-[200px] py-3 rounded-md cursor-pointer my-4'>
+                PROCEED TO CHECKOUT
+              </button>
+            </div>
+          </div>
+          <div className=' w-full md:w-1/3 flex flex-col md:items-center px-2'>
+            <p className='text-gray-600 text-lg'>
+              If you have any promo code, Enter it here
+            </p>
+            <div className='mt-3 flex flex-row justify-between items-center bg-[#eaeaea] rounded-md'>
+              <input
+                className='bg-transparent outline-none pl-3 '
+                type='text'
+                placeholder='Promo Code'
+              />
+              <button className='w-[150px] py-3 px-[5px] cursor-pointer  bg-black text-white text font-bold rounded-2xl '>
+                Submit
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
