@@ -2,7 +2,8 @@
 import { assets } from '@/assets/frontend_assets/assets';
 import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
-
+import { useDispatch } from 'react-redux';
+import { toggleAuthModal } from '@/redux/slices/authSlice';
 const menuItems = [
   { name: 'Home', url: '/' },
   { name: 'Menu', url: '/menu' },
@@ -10,11 +11,8 @@ const menuItems = [
   { name: 'Contact us', url: '/contact-us' },
 ];
 
-interface NavbarProps {
-  setShowLogin: (show: boolean) => void;
-}
-
-const Navbar: React.FC<NavbarProps> = ({ setShowLogin }) => {
+const Navbar = () => {
+  const dispatch = useDispatch();
   const [activeMenu, setActiveMenu] = useState('Home');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
@@ -37,6 +35,9 @@ const Navbar: React.FC<NavbarProps> = ({ setShowLogin }) => {
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
+  };
+  const openAuthModal = () => {
+    dispatch(toggleAuthModal(true));
   };
 
   return (
@@ -139,7 +140,7 @@ const Navbar: React.FC<NavbarProps> = ({ setShowLogin }) => {
               />
               <div className='dot absolute min-w-2.5 min-h-2.5 bg-orange-700 rounded-md top-[-8px] left-3'></div>
               <button
-                onClick={() => setShowLogin(true)}
+                onClick={openAuthModal}
                 className='px-4 py-2 font-bold text-gray-800 rounded-[20px] bg-white md:hover:bg-orange-800 hover:bg-orange-500 hover:text-white transition-colors border-2 border-orange-500'
               >
                 Sign in
