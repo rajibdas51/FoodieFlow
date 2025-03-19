@@ -10,8 +10,7 @@ import { RootState } from '@/redux/store';
 
 const CartPage = () => {
   const dispatch = useDispatch();
-  const { cartProducts, subtotal, total, itemCount, deliveryFee, isEmpty } =
-    useCart();
+  const { cartProducts, subtotal, total, deliveryFee, isEmpty } = useCart();
   const { cartItems } = useSelector((state: RootState) => state.cart);
   // Handle item removal
   const handleRemoveItem = (itemId: string) => {

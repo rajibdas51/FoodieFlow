@@ -4,7 +4,8 @@ import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { toggleAuthModal } from '@/redux/slices/authSlice';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { FaSearch, FaShoppingCart } from 'react-icons/fa';
 const menuItems = [
   { name: 'Home', url: '/' },
   { name: 'Menu', url: '/menu' },
@@ -18,7 +19,8 @@ const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
   const router = useRouter();
-
+  const path = usePathname();
+  const ishome = path === '/' ? true : false;
   // Handle scroll event to make navbar sticky
   useEffect(() => {
     const handleScroll = () => {
@@ -47,7 +49,7 @@ const Navbar = () => {
       className={`w-full ${
         isSticky
           ? 'fixed top-0 left-0 right-0 shadow-md z-30 bg-white transition-all '
-          : ''
+          : ' '
       }`}
     >
       <div
@@ -89,8 +91,9 @@ const Navbar = () => {
               alt='FoodieFlow logo'
               width={0}
               height={0}
-              className='md:w-50 w-35'
+              className='md:w-50 w-35 cursor-pointer'
               quality={100}
+              onClick={() => router.push('/')}
             />
           </div>
 
@@ -100,21 +103,48 @@ const Navbar = () => {
               <li
                 key={item.name}
                 className={` ${
-                  isSticky && item.name === activeMenu
+                  !isSticky && item.name === activeMenu && ishome
                     ? ' hover:text-orange-500 border-b-2 border-b-orange-500 transition-all  cursor-pointer'
                     : 'text-gray-800 hover:text-orange-500   transition-all  cursor-pointer'
                 } 
+                   ${
+                     isSticky && item.name === activeMenu && ishome
+                       ? '   hover:text-orange-500 text-gray-800 transition-all border-b-2  border-b-orange-500 cursor-pointer'
+                       : 'text-gray-800 hover:text-gray-100  transition-all  cursor-pointer'
+                   } 
                 ${
-                  !isSticky && item.name === activeMenu
+                  !isSticky && item.name === activeMenu && ishome
                     ? '   hover:text-white text-white transition-all border-b-2  border-b-white cursor-pointer'
                     : 'text-gray-800 hover:text-gray-100  transition-all  cursor-pointer'
                 } 
+
                   ${
-                    !isSticky && item.name !== activeMenu
-                      ? '   hover:text-white  transition-all   cursor-pointer'
+                    !isSticky && item.name !== activeMenu && ishome
+                      ? '   hover:text-white hover:border-b-white hover:border-b-2  transition-all   cursor-pointer'
                       : 'text-gray-800 hover:text-gray-100  transition-all  cursor-pointer'
                   }
-                
+                   ${
+                     !isSticky && item.name !== activeMenu && !ishome
+                       ? '   hover:text-orange-500 text-black transition-all hover:border-b-2  hover:border-b-orange-500 cursor-pointer'
+                       : 'text-gray-800 hover:text-orange-500  transition-all  cursor-pointer'
+                   } 
+
+                    ${
+                      !isSticky && item.name === activeMenu && !ishome
+                        ? '   hover:text-orange-500 text-orange-500 transition-all border-b-2  border-b-orange-500 cursor-pointer'
+                        : 'text-gray-800 hover:text-orange-500  transition-all  cursor-pointer'
+                    } 
+                      ${
+                        isSticky && item.name !== activeMenu && !ishome
+                          ? '   hover:text-orange-500 text-gray-800 transition-all hover:border-b-2  hover:border-b-orange-500 cursor-pointer'
+                          : 'text-gray-800 hover:text-orange-500  transition-all  cursor-pointer'
+                      } 
+                        ${
+                          isSticky && item.name === activeMenu && !ishome
+                            ? '   text-orange-500  transition-all border-b-2  border-b-orange-500 cursor-pointer'
+                            : 'text-gray-800 hover:text-orange-500  transition-all  cursor-pointer'
+                        } 
+
                 `}
                 onClick={() => setActiveMenu(item.name)}
               >
@@ -125,26 +155,31 @@ const Navbar = () => {
 
           {/* Right icons section */}
           <div className='navbar-right flex-1 flex justify-end items-center gap-3 md:gap-6 lg:gap-10 pr-2'>
-            <Image
-              src={assets.search_icon}
-              alt='Search icon'
-              width={24}
-              height={24}
-              className='cursor-pointer'
+            <FaSearch
+              className={`${
+                !isSticky && ishome ? 'text-white' : 'text-orange-500'
+              } cursor-pointer text-2xl `}
             />
             <div className='navbar-search-icon flex items-center space-x-4 relative'>
-              <Image
-                src={assets.basket_icon}
-                alt='basket icon'
-                width={24}
-                height={24}
-                className='cursor-pointer'
+              <FaShoppingCart
+                className={`${
+                  !isSticky && ishome ? 'text-white' : 'text-orange-500'
+                } cursor-pointer text-2xl `}
                 onClick={() => router.push('/cart')}
               />
-              <div className='dot absolute min-w-2.5 min-h-2.5 bg-orange-700 rounded-md top-[-8px] left-3'></div>
+              <div
+                className={`dot absolute min-w-2.5 min-h-2.5 ${
+                  isSticky ? 'bg-orange-500' : 'bg-red-600'
+                } rounded-md top-[-8px] left-3`}
+              ></div>
               <button
                 onClick={openAuthModal}
-                className='px-4 py-2 font-bold text-gray-800 rounded-[20px] bg-white md:hover:bg-orange-800 hover:bg-orange-500 hover:text-white transition-colors border-2 border-orange-500'
+                className={`px-4 py-2 font-bold text-gray-800 rounded-[20px] bg-white 
+                 ${
+                   !isSticky && ishome
+                     ? 'md:hover:bg-red-500 outline-none'
+                     : 'md:hover:bg-orange-500 border-orange-500'
+                 }  hover:bg-orange-500 hover:text-white transition-colors border-2 0 cursor-pointer`}
               >
                 Sign in
               </button>
