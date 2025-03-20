@@ -7,7 +7,7 @@ export const useCart = () => {
   const { cartItems } = useSelector((state: RootState) => state.cart);
   const { foodList } = useSelector((state: RootState) => state.food);
 
-  // Constants
+  // delivery fee
   const DELIVERY_FEE = 2;
 
   // Memoized cart calculations

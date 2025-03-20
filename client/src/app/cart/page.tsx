@@ -7,9 +7,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { removeFromCart } from '@/redux/slices/cartSlice';
 import { useCart } from '@/hooks/useCart';
 import { RootState } from '@/redux/store';
+import { useRouter } from 'next/navigation';
 
 const CartPage = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const { cartProducts, subtotal, total, deliveryFee, isEmpty } = useCart();
   const { cartItems } = useSelector((state: RootState) => state.cart);
   // Handle item removal
@@ -95,10 +97,11 @@ const CartPage = () => {
               <hr />
 
               <button
-                className={`text-white bg-orange-500 w-[200px] py-3 rounded-md cursor-pointer my-4 ${
+                className={`text-white bg-orange-500 w-[210px]  py-3 rounded-md cursor-pointer my-4 ${
                   isEmpty ? 'opacity-50 cursor-not-allowed' : ''
                 }`}
                 disabled={isEmpty}
+                onClick={() => router.push('/checkout')}
               >
                 PROCEED TO CHECKOUT
               </button>
