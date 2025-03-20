@@ -97,8 +97,8 @@ const CartPage = () => {
               <hr />
 
               <button
-                className={`text-white bg-orange-500 w-[210px]  py-3 rounded-md cursor-pointer my-4 ${
-                  isEmpty ? 'opacity-50 cursor-not-allowed' : ''
+                className={`text-white bg-orange-500 w-[210px]  py-3 rounded-md  my-4 ${
+                  isEmpty ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
                 }`}
                 disabled={isEmpty}
                 onClick={() => router.push('/checkout')}

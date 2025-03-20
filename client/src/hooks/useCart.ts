@@ -7,9 +7,6 @@ export const useCart = () => {
   const { cartItems } = useSelector((state: RootState) => state.cart);
   const { foodList } = useSelector((state: RootState) => state.food);
 
-  // delivery fee
-  const DELIVERY_FEE = 2;
-
   // Memoized cart calculations
   const cartDetails = useMemo(() => {
     // Filter only products in cart for better performance
@@ -27,14 +24,18 @@ export const useCart = () => {
       (sum, quantity) => sum + quantity,
       0
     );
-    const total = subtotal + DELIVERY_FEE;
+
+    // Set delivery fee to 0 if cart is empty
+    const deliveryFee = itemCount === 0 ? 0 : 2;
+
+    const total = subtotal + deliveryFee;
 
     return {
       cartProducts,
       subtotal,
       total,
       itemCount,
-      deliveryFee: DELIVERY_FEE,
+      deliveryFee,
       isEmpty: itemCount === 0,
     };
   }, [foodList, cartItems]);

@@ -5,11 +5,11 @@ import React from 'react';
 const CheckoutPage = () => {
   const { subtotal, total, deliveryFee, isEmpty } = useCart();
   return (
-    <div className='mx-auto'>
+    <div className='mx-auto mt-30'>
       <h1 className='text-6xl text-gray-800 font-bold text-center my-6'>
         Checkout
       </h1>
-      <form className='place-order container mx-auto flex flex-col md:flex-row justify-between py-10 px-2'>
+      <form className='place-order container mx-auto flex flex-col md:flex-row justify-between py-8 px-2'>
         <div className='place-order-left w-full md:max-w-1/3'>
           <h2 className='text-3xl font-bold mb-12'>Delivery Information</h2>
           <div className='flex flex-row gap-4'>

@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { toggleAuthModal } from '@/redux/slices/authSlice';
 import { usePathname, useRouter } from 'next/navigation';
 import { FaSearch, FaShoppingCart } from 'react-icons/fa';
+import { useCart } from '@/hooks/useCart';
 const menuItems = [
   { name: 'Home', url: '/' },
   { name: 'Menu', url: '/menu' },
@@ -15,11 +16,13 @@ const menuItems = [
 
 const Navbar = () => {
   const dispatch = useDispatch();
+
   const [activeMenu, setActiveMenu] = useState('Home');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
   const router = useRouter();
   const path = usePathname();
+  const { isEmpty } = useCart();
   const ishome = path === '/' ? true : false;
   // Handle scroll event to make navbar sticky
   useEffect(() => {
@@ -47,10 +50,10 @@ const Navbar = () => {
   return (
     <div
       className={`w-full ${
-        isSticky
+        isSticky || !ishome
           ? 'fixed top-0 left-0 right-0 shadow-md z-30 bg-white transition-all '
           : ' '
-      }`}
+      } `}
     >
       <div
         className={`container mx-auto ${
@@ -61,7 +64,7 @@ const Navbar = () => {
       >
         <div
           className={` ${
-            isSticky ? 'py-2' : 'py-5'
+            isSticky ? 'py-2' : 'py-4'
           } flex justify-between items-center`}
         >
           {/* Hamburger menu - only on mobile */}
@@ -168,7 +171,9 @@ const Navbar = () => {
                 onClick={() => router.push('/cart')}
               />
               <div
-                className={`dot absolute min-w-2.5 min-h-2.5 ${
+                className={`${
+                  isEmpty ? 'hidden' : 'inline-block'
+                } dot absolute min-w-2.5 min-h-2.5 ${
                   isSticky ? 'bg-orange-500' : 'bg-red-600'
                 } rounded-md top-[-8px] left-3`}
               ></div>
