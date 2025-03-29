@@ -21,7 +21,7 @@ const CartPage = () => {
 
   return (
     <div className='container mx-auto'>
-      <div className='cart mt-[100px]'>
+      <div className='cart mt-[140px]'>
         {/* Cart Header */}
         <div className='cart-items px-1'>
           <div className='cart-items-title grid grid-cols-6 gap-4 items-center text-center text-gray-600 font-semibold'>
