@@ -33,12 +33,12 @@ const Dashboard = ({ children }: { children: React.ReactNode }) => {
     { icon: <Home size={20} />, label: 'Dashboard', path: '/admin/dashboard' },
     {
       icon: <PlusCircle size={20} />,
-      label: 'Add Items',
-      path: '/dashboard/add-items',
+      label: 'Add Menu',
+      path: '/dashboard/add-menu',
     },
     {
       icon: <List size={20} />,
-      label: 'List Items',
+      label: 'Menu Items',
       path: 'dashboard/admin/list-items',
     },
     { icon: <ShoppingBag size={20} />, label: 'Orders', path: '/admin/orders' },
