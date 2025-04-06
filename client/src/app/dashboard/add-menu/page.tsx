@@ -1,17 +1,53 @@
+'use client';
 import { assets } from '@/assets/admin_assets/assets';
 import Image from 'next/image';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 const AddMenuPage = () => {
+  const [image, setImage] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  // Create object URL only on client-side after component mounts
+  useEffect(() => {
+    if (image) {
+      const objectUrl = URL.createObjectURL(image);
+      setPreviewUrl(objectUrl);
+
+      // Clean up function to revoke the URL when component unmounts or image changes
+      return () => {
+        URL.revokeObjectURL(objectUrl);
+      };
+    }
+  }, [image]);
+
   return (
     <div className='w-[70%] ml-5 mt-10 text-[#6d6d6d] text-[16px]'>
       <form className='flex flex-col'>
         <div className='add-img-upload flex-col'>
           <p>Upload Product Image</p>
           <label htmlFor='image'>
-            <Image src={assets.upload_area} alt='' />
+            <div className='relative  py-3  border-gray-300 rounded-md overflow-hidden'>
+              <Image
+                src={previewUrl || assets.upload_area}
+                alt='Product preview'
+                width={100}
+                height={100}
+                className='w-35 h-25 cursor-pointer '
+              />
+            </div>
           </label>
-          <input type='file' id='image' hidden required className='border-2 ' />
+          <input
+            type='file'
+            id='image'
+            hidden
+            required
+            className='border-2'
+            onChange={(e) => {
+              if (e.target.files && e.target.files[0]) {
+                setImage(e.target.files[0]);
+              }
+            }}
+          />
         </div>
         <div className='add-product-name flex flex-col my-5'>
           <p>Product name</p>
@@ -50,7 +86,7 @@ const AddMenuPage = () => {
               <option value='Noddles'>Noddles</option>
             </select>
           </div>
-          <div className='add-price felx flex-col'>
+          <div className='add-price flex flex-col'>
             <p>Product price</p>
             <input
               type='Number'
