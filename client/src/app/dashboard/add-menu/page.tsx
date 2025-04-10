@@ -2,10 +2,26 @@
 import { assets } from '@/assets/admin_assets/assets';
 import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
-
+import axios from 'axios';
 const AddMenuPage = () => {
+  const url = 'http://localhost:4000';
   const [image, setImage] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [data, setData] = useState({
+    name: '',
+    description: '',
+    price: '',
+    category: 'Salad',
+  });
+
+  const onChangeHandler = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    const { name, value } = e.target;
+    setData((data) => ({ ...data, [name]: value }));
+  };
 
   // Create object URL only on client-side after component mounts
   useEffect(() => {
@@ -20,9 +36,35 @@ const AddMenuPage = () => {
     }
   }, [image]);
 
+  const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('name', data.name);
+    formData.append('description', data.description);
+    formData.append('price', data.price);
+    formData.append('category', data.category);
+    if (image) {
+      formData.append('image', image);
+    }
+
+    const res = await axios.post(`${url}/api/food/add`, formData);
+    if (res.status === 200) {
+      alert('Product added successfully!');
+      setData({
+        name: '',
+        description: '',
+        price: '',
+        category: 'Salad',
+      });
+      setImage(null);
+      setPreviewUrl(null);
+    } else {
+      alert('Failed to add product. Please try again.');
+    }
+  };
   return (
     <div className='w-[70%] ml-5 mt-10 text-[#6d6d6d] text-[16px]'>
-      <form className='flex flex-col'>
+      <form className='flex flex-col' onSubmit={onSubmitHandler}>
         <div className='add-img-upload flex-col'>
           <p>Upload Product Image</p>
           <label htmlFor='image'>
@@ -52,6 +94,8 @@ const AddMenuPage = () => {
         <div className='add-product-name flex flex-col my-5'>
           <p>Product name</p>
           <input
+            onChange={onChangeHandler}
+            value={data.name}
             type='text'
             name='name'
             placeholder='type here'
@@ -61,6 +105,8 @@ const AddMenuPage = () => {
         <div className='add-product-description flex flex-col '>
           <p>Product Description</p>
           <textarea
+            onChange={onChangeHandler}
+            value={data.description}
             name='description'
             placeholder='type here'
             id=''
@@ -73,6 +119,8 @@ const AddMenuPage = () => {
           <div className='add-category flex flex-col my-5'>
             <p>Product category</p>
             <select
+              onChange={onChangeHandler}
+              value={data.category}
               name='category'
               className='w-6/7 mt-1 border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:border-none focus:ring-1 focus:ring-orange-500'
             >
@@ -89,6 +137,8 @@ const AddMenuPage = () => {
           <div className='add-price flex flex-col'>
             <p>Product price</p>
             <input
+              onChange={onChangeHandler}
+              value={data.price}
               type='Number'
               name='price'
               placeholder='$20'
