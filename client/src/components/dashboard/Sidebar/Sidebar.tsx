@@ -39,7 +39,7 @@ const Dashboard = () => {
     {
       icon: <List size={20} />,
       label: 'Menu Items',
-      path: 'dashboard/admin/list-items',
+      path: 'dashboard/menu-items',
     },
     { icon: <ShoppingBag size={20} />, label: 'Orders', path: '/admin/orders' },
     { icon: <Users size={20} />, label: 'Customers', path: '/admin/customers' },
