@@ -61,7 +61,7 @@ const AddMenuPage = () => {
       setPreviewUrl(null);
       toast.success(res.data.message);
     } else {
-      alert('Failed to add product. Please try again.');
+      toast.error(res.data.message);
     }
   };
   return (
