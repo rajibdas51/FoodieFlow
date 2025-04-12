@@ -3,6 +3,7 @@ import { assets } from '@/assets/admin_assets/assets';
 import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 const AddMenuPage = () => {
   const url = 'http://localhost:4000';
   const [image, setImage] = useState<File | null>(null);
@@ -58,6 +59,7 @@ const AddMenuPage = () => {
       });
       setImage(null);
       setPreviewUrl(null);
+      toast.success(res.data.message);
     } else {
       alert('Failed to add product. Please try again.');
     }

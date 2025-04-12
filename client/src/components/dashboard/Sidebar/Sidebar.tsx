@@ -22,7 +22,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 
-const Dashboard = ({ children }: { children: React.ReactNode }) => {
+const Dashboard = () => {
   const [isExpanded, setIsExpanded] = useState(true);
 
   const toggleSidebar = () => {
@@ -156,7 +156,6 @@ const Dashboard = ({ children }: { children: React.ReactNode }) => {
         {/* Top navigation */}
 
         {/* Page content */}
-        <main className='flex-1 overflow-auto p-6'>{children}</main>
       </div>
     </div>
   );
