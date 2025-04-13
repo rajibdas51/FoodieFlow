@@ -2,6 +2,7 @@
 import axios from 'axios';
 import Image from 'next/image';
 import React, { useEffect } from 'react';
+import { toast } from 'react-toastify';
 interface MenuItemType {
   _id: string;
   name: string;
@@ -27,8 +28,11 @@ const MenuItemspage = () => {
 
   const removeFood = async (id: string) => {
     try {
-      const res = await axios.delete(`${url}/api/food/${id}`);
+      const res = await axios.delete(`${url}/api/food/remove`, {
+        data: { id: id },
+      });
       if (res.status === 200) {
+        toast.success('Food item deleted successfully!');
         fetchmenuItems();
       }
     } catch (error) {
@@ -74,7 +78,12 @@ const MenuItemspage = () => {
                 <p>{item.description}</p>
                 <p>{item.category}</p>
                 <p>{item.price}</p>
-                <p onClick={() => removeFood(item?._id)}>X</p>
+                <p
+                  className='cursor-pointer'
+                  onClick={() => removeFood(item?._id)}
+                >
+                  X
+                </p>
               </div>
             );
           })}
