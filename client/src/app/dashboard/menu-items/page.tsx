@@ -3,6 +3,7 @@ import axios from 'axios';
 import Image from 'next/image';
 import React, { useEffect } from 'react';
 interface MenuItemType {
+  _id: string;
   name: string;
   description: string;
   price: number;
@@ -23,9 +24,22 @@ const MenuItemspage = () => {
       console.error('Error fetching menu items:', error);
     }
   };
+
+  const removeFood = async (id: string) => {
+    try {
+      const res = await axios.delete(`${url}/api/food/${id}`);
+      if (res.status === 200) {
+        fetchmenuItems();
+      }
+    } catch (error) {
+      console.error('Error deleting food item:', error);
+    }
+  };
+
   useEffect(() => {
     fetchmenuItems();
   }, [menuItems]);
+
   return (
     <div>
       <div className='list add flex flex-col'>
@@ -60,7 +74,7 @@ const MenuItemspage = () => {
                 <p>{item.description}</p>
                 <p>{item.category}</p>
                 <p>{item.price}</p>
-                <p>X</p>
+                <p onClick={() => removeFood(item?._id)}>X</p>
               </div>
             );
           })}
