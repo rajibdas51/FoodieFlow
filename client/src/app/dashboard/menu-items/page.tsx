@@ -36,6 +36,7 @@ const MenuItemspage = () => {
         fetchmenuItems();
       }
     } catch (error) {
+      toast.error('Error deleting food item!');
       console.error('Error deleting food item:', error);
     }
   };
