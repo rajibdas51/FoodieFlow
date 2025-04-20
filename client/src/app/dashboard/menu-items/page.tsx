@@ -4,6 +4,7 @@ import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { FaTrash, FaSearch } from 'react-icons/fa';
 import { toast } from 'react-toastify';
+import Pagination from '@/components/Pagination/Pagination'; // Import the simplified pagination component
 
 interface MenuItemType {
   _id: string;
@@ -19,6 +20,10 @@ const MenuItemsPage = () => {
   const [menuItems, setMenuItems] = useState<MenuItemType[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 2; // Fixed items per page for simplicity
 
   const fetchMenuItems = async () => {
     try {
@@ -54,15 +59,26 @@ const MenuItemsPage = () => {
     fetchMenuItems();
   }, []);
 
+  useEffect(() => {
+    // Reset to first page when search term changes
+    setCurrentPage(1);
+  }, [searchTerm]);
+
+  // Filter menu items based on search term
   const filteredItems = menuItems.filter(
     (item) =>
       item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Get current items for display
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
+
   return (
-    <div className='w-full mx-auto px-0 sm:px-0 lg:px-0 py-8'>
-      <div className='bg-white rounded-lg shadow-lg p-4 sm:py-6'>
+    <div className='w-full mx-auto px-4 sm:px-6 lg:px-0 py-8'>
+      <div className='bg-white rounded-lg shadow-lg p-4 sm:p-6'>
         <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4'>
           <h1 className='text-xl sm:text-2xl font-bold text-gray-800 border-b-2 border-indigo-600 pb-2'>
             All Food Items
@@ -117,7 +133,7 @@ const MenuItemsPage = () => {
                 </thead>
 
                 <tbody className='bg-white divide-y divide-gray-200'>
-                  {filteredItems.map((item) => (
+                  {currentItems.map((item) => (
                     <tr
                       key={item._id}
                       className='hover:bg-gray-50 transition-colors duration-200'
@@ -172,7 +188,7 @@ const MenuItemsPage = () => {
 
             {/* Card layout for small screens */}
             <div className='md:hidden grid grid-cols-1 sm:grid-cols-2 gap-4'>
-              {filteredItems.map((item) => (
+              {currentItems.map((item) => (
                 <div
                   key={item._id}
                   className='bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200'
@@ -218,12 +234,17 @@ const MenuItemsPage = () => {
                 </div>
               ))}
             </div>
+
+            {/* Simplified Pagination */}
+            <Pagination
+              totalItems={filteredItems.length}
+              itemsPerPage={itemsPerPage}
+              currentPage={currentPage}
+              onPageChange={setCurrentPage}
+              className='mt-6'
+            />
           </>
         )}
-        <div className='mt-4 text-right text-sm text-gray-500'>
-          {filteredItems.length} item{filteredItems.length !== 1 ? 's' : ''}{' '}
-          found
-        </div>
       </div>
     </div>
   );
