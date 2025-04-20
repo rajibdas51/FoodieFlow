@@ -5,12 +5,9 @@ import React from 'react';
 const CheckoutPage = () => {
   const { subtotal, total, deliveryFee, isEmpty } = useCart();
   return (
-    <div className='mx-auto mt-30'>
-      <h1 className='text-6xl text-gray-800 font-bold text-center my-6'>
-        Checkout
-      </h1>
-      <form className='place-order container mx-auto flex flex-col md:flex-row justify-between py-8 px-2'>
-        <div className='place-order-left w-full md:max-w-1/3'>
+    <div className='mx-auto'>
+      <form className='place-order container mx-auto flex flex-row justify-between'>
+        <div className='place-order-left w-full max-w-1/3'>
           <h2 className='text-3xl font-bold mb-12'>Delivery Information</h2>
           <div className='flex flex-row gap-4'>
             <div>
@@ -21,7 +18,7 @@ const CheckoutPage = () => {
                 First name<span className='text-red-500'>*</span>
               </label>
               <input
-                className='mb-3 mt-2 p-[10px] rounded-md w-full outline-orange-500 border-[#c5c5c5] border-1'
+                className='mb-3 p-[10px] rounded-md w-full outline-orange-500 border-[#c5c5c5] border-1'
                 type='text'
                 placeholder='First name'
                 required
@@ -32,7 +29,7 @@ const CheckoutPage = () => {
                 Last name<span className='text-red-500'>*</span>
               </label>
               <input
-                className='mb-3 mt-2 p-[10px] rounded-md w-full outline-orange-500 border-[#c5c5c5] border-1'
+                className='mb-3 p-[10px] rounded-md w-full outline-orange-500 border-[#c5c5c5] border-1'
                 type='text'
                 placeholder='Last name'
                 required
@@ -44,7 +41,7 @@ const CheckoutPage = () => {
               Email address <span className='text-red-500'>*</span>
             </label>
             <input
-              className='mb-3 mt-2 p-[10px] rounded-md w-full outline-orange-500 border-[#c5c5c5] border-1'
+              className='mb-3 p-[10px] rounded-md w-full outline-orange-500 border-[#c5c5c5] border-1'
               type='email'
               name=''
               id=''
@@ -54,104 +51,23 @@ const CheckoutPage = () => {
           </div>
           <div className='my-3'>
             <label htmlFor='email' className='text-gray-600 font-semibold'>
-              Phone <span className='text-red-500'>*</span>
-            </label>
-            <input
-              className='mb-3 mt-2 p-[10px] rounded-md w-full outline-orange-500 border-[#c5c5c5] border-1'
-              type='phone'
-              name='phone'
-              id='phone'
-              placeholder='PHone number'
-              required
-            />
-          </div>
-
-          <div className='my-3'>
-            <label
-              htmlFor='country'
-              className='text-gray-600 font-semibold pb-2'
-            >
               Country/Region <span className='text-red-500'>*</span>
             </label>
-            <select
-              name='country'
-              id='country'
-              className='mb-3 mt-3 p-[10px] rounded-md w-full outline-orange-500 border-[#c5c5c5] border-1'
-              required
-              defaultValue='Bangladesh'
-            >
-              <option value='Bangladesh'>Bangladesh</option>
-              <option value='India'>India</option>
-              <option value='Pakistan'>Pakistan</option>
-              <option value='United States'>United States</option>
-              <option value='United Kingdom'>United Kingdom</option>
-              <option value='Canada'>Canada</option>
-              <option value='Australia'>Australia</option>
-              <option value='Germany'>Germany</option>
-              <option value='France'>France</option>
-              <option value='Italy'>Italy</option>
-              <option value='Japan'>Japan</option>
-              <option value='China'>China</option>
-              <option value='South Korea'>South Korea</option>
-              <option value='Singapore'>Singapore</option>
-              <option value='Malaysia'>Malaysia</option>
-              <option value='Indonesia'>Indonesia</option>
-              <option value='Thailand'>Thailand</option>
-              <option value='Vietnam'>Vietnam</option>
-              <option value='Saudi Arabia'>Saudi Arabia</option>
-              <option value='UAE'>UAE</option>
-            </select>
-          </div>
-          <div>
-            <label htmlFor='street' className='text-gray-600 font-semibold'>
-              Street address<span className='text-red-500'>*</span>
-            </label>
-            <input
-              className='mb-3 mt-2  p-[10px] rounded-md w-full outline-orange-500 border-[#c5c5c5] border-1'
-              type='text'
-              name=''
-              id=''
-              placeholder='Street'
-            />
-          </div>
-          <div className='flex flex-row gap-4 py-3'>
-            <div>
-              <label htmlFor='city' className='text-gray-600 font-semibold'>
-                City<span className='text-red-500'>*</span>
-              </label>
-              <input
-                className='mb-3 mt-2 p-[10px] rounded-md w-full outline-orange-500 border-[#c5c5c5] border-1'
-                type='text'
-                placeholder='City'
-                required
-              />
-            </div>
-            <div>
-              <label htmlFor='name' className='text-gray-600 font-semibold'>
-                State
-              </label>
-              <input
-                className='mb-3 mt-2  p-[10px] rounded-md w-full outline-orange-500 border-[#c5c5c5] border-1'
-                type='text'
-                placeholder='State'
-                required
-              />
-            </div>
           </div>
 
+          <input type='text' name='' id='' placeholder='Street' />
           <div className='multi-fields'>
-            <label htmlFor='name' className='text-gray-600 font-semibold'>
-              State
-            </label>
-            <input
-              className='mb-3 mt-2  p-[10px] rounded-md w-full outline-orange-500 border-[#c5c5c5] border-1'
-              type='text'
-              placeholder='Zip code'
-            />
+            <input type='text' placeholder='City' />
+            <input type='text' placeholder='State' />
           </div>
+          <div className='multi-fields'>
+            <input type='text' placeholder='Zip code' />
+            <input type='text' placeholder='Country' />
+          </div>
+          <input type='text' name='' id='' placeholder='Phone' />
         </div>
-        <div className='place-order-right w-full  md:w-1/2'>
-          <div className='w-full  flex flex-col gap-5 px-2 md:px-2'>
+        <div className='place-order-right w-1/2'>
+          <div className='w-full md:w-2/3 flex flex-col gap-5 px-2 md:px-2'>
             <h2 className='text-2xl font-bold'>Cart Totals</h2>
             <div className='flex flex-col gap-4'>
               <div className='flex justify-between text-gray-600'>

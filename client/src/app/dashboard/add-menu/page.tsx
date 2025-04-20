@@ -50,7 +50,7 @@ const AddMenuPage = () => {
 
     const res = await axios.post(`${url}/api/food/add`, formData);
     if (res.status === 200) {
-      alert('Product added successfully!');
+      toast.success('Food added successfully!');
       setData({
         name: '',
         description: '',
@@ -59,7 +59,6 @@ const AddMenuPage = () => {
       });
       setImage(null);
       setPreviewUrl(null);
-      toast.success(res.data.message);
     } else {
       toast.error(res.data.message);
     }

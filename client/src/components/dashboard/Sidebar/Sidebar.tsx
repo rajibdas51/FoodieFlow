@@ -21,10 +21,13 @@ import {
 } from '@/components/ui/tooltip';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
+import { assets } from '@/assets/frontend_assets/assets';
+import { useRouter } from 'next/navigation';
 
 const Dashboard = () => {
   const [isExpanded, setIsExpanded] = useState(true);
-
+  const router = useRouter();
   const toggleSidebar = () => {
     setIsExpanded(!isExpanded);
   };
@@ -39,7 +42,7 @@ const Dashboard = () => {
     {
       icon: <List size={20} />,
       label: 'Menu Items',
-      path: 'dashboard/menu-items',
+      path: '/dashboard/menu-items',
     },
     { icon: <ShoppingBag size={20} />, label: 'Orders', path: '/admin/orders' },
     { icon: <Users size={20} />, label: 'Customers', path: '/admin/customers' },
@@ -67,7 +70,20 @@ const Dashboard = () => {
         {/* Logo area */}
         <div className='p-4 border-b border-border flex items-center justify-between'>
           {isExpanded && (
-            <div className='font-bold text-lg text-primary'>FoodAdmin</div>
+            <div
+              className='flex items-center cursor-pointer'
+              onClick={() => router.push('/')}
+            >
+              <Image
+                src={assets.logo}
+                alt='Company Logo'
+                width={100}
+                height={100}
+                quality={100}
+                className='w-36'
+                priority
+              />
+            </div>
           )}
           <TooltipProvider>
             <Tooltip>

@@ -14,13 +14,14 @@ export default function DashboardLayout({
     <html>
       <body>
         <div className=' h-screen'>
-          <Navbar />
           <hr />
           <div className='flex'>
             <Sidebar />
             {/* Sidebar with navigation links    */}
             <div className='flex-1 flex flex-col'>
-              <main className='p-6'>{children}</main> {/* Main content area */}
+              <Navbar />
+              <main className='md:px-2 lg:px-4 py-6'>{children}</main>{' '}
+              {/* Main content area */}
             </div>
           </div>
         </div>

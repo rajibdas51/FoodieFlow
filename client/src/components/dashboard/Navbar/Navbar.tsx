@@ -1,9 +1,9 @@
 import React from 'react';
 import { assets } from '@/assets/admin_assets/assets';
-import Image from 'next/image';
-import { Bell, Search } from 'lucide-react';
+
+import { Bell } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -23,31 +23,10 @@ import {
 
 const Navbar = () => {
   return (
-    <header className='sticky top-0 z-10 w-full bg-background border-b border-border shadow-sm'>
+    <header className='sticky top-0 z-10 w-full bg-background border-b-[1px] border-border  py-[2px]'>
       <div className=' flex h-16 items-center justify-between px-4 md:px-6'>
-        {/* Logo */}
-        <div className='flex items-center'>
-          <Image
-            src={assets.logo}
-            alt='Company Logo'
-            width={100}
-            height={100}
-            quality={100}
-            className='w-36'
-            priority
-          />
-        </div>
-
-        {/* Search (visible on medium screens and up) */}
         <div className='hidden md:flex w-full max-w-md mx-4'>
-          <div className='relative w-full'>
-            <Search className='absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground' />
-            <Input
-              type='search'
-              placeholder='Search...'
-              className='w-full pl-8'
-            />
-          </div>
+          <div className='relative w-full'></div>
         </div>
 
         {/* User actions */}
