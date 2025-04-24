@@ -33,7 +33,7 @@ const Dashboard = () => {
   };
 
   const menuItems = [
-    { icon: <Home size={20} />, label: 'Dashboard', path: '/admin/dashboard' },
+    { icon: <Home size={20} />, label: 'Dashboard', path: '/dashboard' },
     {
       icon: <PlusCircle size={20} />,
       label: 'Add Menu',
