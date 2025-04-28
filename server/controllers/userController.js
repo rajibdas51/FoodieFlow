@@ -1,4 +1,4 @@
-import userModel from '../models/userModel';
+import userModel from '../models/userModel.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
@@ -15,6 +15,7 @@ const createToken = (id) => {
 
 const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
+  console.log('register api hit!');
   try {
     // checking if user exists
     const userExists = await userModel.findOne({ email });
