@@ -42,6 +42,7 @@ const LoginPopup: React.FC = () => {
     event.preventDefault();
 
     // Add your login logic here
+
     try {
       let newUrl = url;
       if (authModalView === 'signup') {
@@ -49,15 +50,17 @@ const LoginPopup: React.FC = () => {
       } else {
         newUrl = `${url}/api/users/login`;
       }
+      console.log(data);
       const response = await axios.post(newUrl, data);
+      console.log(response.data);
       if (response.data.success) {
         toast.success(response.data.message);
-        const { user } = response.data;
-        dispatch(setUser(user));
-        localStorage.setItem('token', JSON.stringify(user.token));
+
+        dispatch(setUser(response.data.user));
+        localStorage.setItem('token', JSON.stringify(response.data.token));
         handleCloseModal();
       } else {
-        toast.error('Login failed. Please try again.');
+        toast.error(`${authModalView} failed. Please try again.`);
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -148,13 +151,23 @@ const LoginPopup: React.FC = () => {
             </button>
           )}
         </div>
+
         <div className='login-popup-condition flex flex-col gap-3 items-center justify-center mx-auto'>
-          <div className='flex flex-row gap-3'>
-            <input type='checkbox' required className='accent-orange-500' />
-            <p className=''>
-              By continuing, I agree to the terms of use & privacy policy.
-            </p>
-          </div>
+          {authModalView === 'signup' && (
+            <div className='flex flex-row gap-3'>
+              <input
+                type='checkbox'
+                name='checkbox'
+                id='checkbox'
+                required
+                className='accent-orange-500'
+              />
+              <p className=''>
+                By continuing, I agree to the terms of use & privacy policy.
+              </p>
+            </div>
+          )}
+
           {authModalView === 'signup' ? (
             <div className='flex md:flex-row gap-3'>
               <p>Already have an account? </p>

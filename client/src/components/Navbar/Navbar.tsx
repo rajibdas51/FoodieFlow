@@ -2,11 +2,12 @@
 import { assets } from '@/assets/frontend_assets/assets';
 import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { toggleAuthModal } from '@/redux/slices/authSlice';
 import { usePathname, useRouter } from 'next/navigation';
 import { FaSearch, FaShoppingCart } from 'react-icons/fa';
 import { useCart } from '@/hooks/useCart';
+import { RootState } from '@/redux/store';
 const menuItems = [
   { name: 'Home', url: '/' },
   { name: 'Menu', url: '/menu' },
@@ -24,6 +25,8 @@ const Navbar = () => {
   const path = usePathname();
   const { isEmpty } = useCart();
   const ishome = path === '/' ? true : false;
+  const { user } = useSelector((state: RootState) => state.auth);
+
   // Handle scroll event to make navbar sticky
   useEffect(() => {
     const handleScroll = () => {
@@ -177,17 +180,19 @@ const Navbar = () => {
                   isSticky ? 'bg-orange-500' : 'bg-red-600'
                 } rounded-md top-[-8px] left-3`}
               ></div>
-              <button
-                onClick={openAuthModal}
-                className={`px-4 py-2 font-bold text-gray-800 rounded-[20px] bg-white 
+              {!user && (
+                <button
+                  onClick={openAuthModal}
+                  className={`px-4 py-2 font-bold text-gray-800 rounded-[20px] bg-white 
                  ${
                    !isSticky && ishome
                      ? 'md:hover:bg-red-500 outline-none'
                      : 'md:hover:bg-orange-500 border-orange-500'
                  }  hover:bg-orange-500 hover:text-white transition-colors border-2 0 cursor-pointer`}
-              >
-                Sign in
-              </button>
+                >
+                  Sign in
+                </button>
+              )}
             </div>
           </div>
         </div>

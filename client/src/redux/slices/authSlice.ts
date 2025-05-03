@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface AuthState {
+export interface AuthState {
   showAuthModal: boolean;
   authModalView: 'login' | 'signup';
   isAuthenticated: boolean;
   user: null | {
-    id: string;
+    id?: string;
     name: string;
     email: string;
     token: string;

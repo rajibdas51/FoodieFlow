@@ -8,6 +8,7 @@ import validator from 'validator';
 
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
+
   try {
     const user = await userModel.findOne({ email });
     if (!user) {
@@ -18,9 +19,12 @@ const loginUser = async (req, res) => {
       return res.json({ success: false, message: 'Invalid credentials!' });
     }
     const token = createToken(user._id);
-    let newUser = { ...user, token: token };
-    res.json({ success: true, user: newUser });
-  } catch (error) {}
+    let newUser = { name: user.name, email: user.email, token: token };
+    res.json({ success: true, message: 'Login Successfull!', user: newUser });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: 'Failed to login user!' });
+  }
 };
 
 const createToken = (id) => {
@@ -44,7 +48,7 @@ const registerUser = async (req, res) => {
           message: 'Please enter a valid email',
         });
       }
-      if (password.length < 8) {
+      if (password.length < 6) {
         return res.json({
           success: false,
           message: 'Please enter a strong password!',
