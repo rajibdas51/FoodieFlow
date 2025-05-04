@@ -19,7 +19,7 @@ const LoginPopup: React.FC = () => {
     email: '',
     password: '',
   });
-  const url = 'http://localhost:4000';
+  const url = process.env.PUBLIC_API_URL || 'http://localhost:4000';
 
   const handleCloseModal = () => {
     dispatch(toggleAuthModal(false));
@@ -50,14 +50,14 @@ const LoginPopup: React.FC = () => {
       } else {
         newUrl = `${url}/api/users/login`;
       }
-      console.log(data);
+
       const response = await axios.post(newUrl, data);
-      console.log(response.data);
+
       if (response.data.success) {
         toast.success(response.data.message);
 
         dispatch(setUser(response.data.user));
-        localStorage.setItem('token', JSON.stringify(response.data.token));
+        localStorage.setItem('token', JSON.stringify(response.data.user.token));
         handleCloseModal();
       } else {
         toast.error(`${authModalView} failed. Please try again.`);

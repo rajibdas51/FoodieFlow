@@ -20,6 +20,11 @@ const Navbar = () => {
 
   const [activeMenu, setActiveMenu] = useState('Home');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState({
+    name: '',
+    email: '',
+    token: '',
+  });
   const [isSticky, setIsSticky] = useState(false);
   const router = useRouter();
   const path = usePathname();
@@ -43,6 +48,11 @@ const Navbar = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (user) {
+      setCurrentUser(user);
+    }
+  }, [user]);
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
@@ -180,7 +190,7 @@ const Navbar = () => {
                   isSticky ? 'bg-orange-500' : 'bg-red-600'
                 } rounded-md top-[-8px] left-3`}
               ></div>
-              {!user && (
+              {!currentUser.token ? (
                 <button
                   onClick={openAuthModal}
                   className={`px-4 py-2 font-bold text-gray-800 rounded-[20px] bg-white 
@@ -192,6 +202,40 @@ const Navbar = () => {
                 >
                   Sign in
                 </button>
+              ) : (
+                <div className='relative group w-[145px]'>
+                  <Image
+                    src={assets.profile_icon}
+                    height={100}
+                    width={100}
+                    alt='profile icon'
+                    className='w-8 h-8 rounded-full cursor-pointer'
+                  />
+                  <ul className='min-w-full absolute hidden group-hover:flex flex-col gap-2 bg-slate-50 p-3 rounded-md border-orange-500 outline-white border-1 right-0 z-index-10'>
+                    <li className='flex flex-row gap-2 items-center justify-start cursor-pointer border-b-2 pb-2'>
+                      {' '}
+                      <Image
+                        src={assets.bag_icon}
+                        height={100}
+                        width={100}
+                        alt='profile icon'
+                        className='w-8 h-8 rounded-full cursor-pointer'
+                      />
+                      <p>Orders</p>
+                    </li>
+                    <li className='flex flex-row gap-2 items-center justify-start cursor-pointer'>
+                      {' '}
+                      <Image
+                        src={assets.logout_icon}
+                        height={100}
+                        width={100}
+                        alt='profile icon'
+                        className='w-8 h-8 rounded-full cursor-pointer'
+                      />
+                      <p>Logout</p>
+                    </li>
+                  </ul>
+                </div>
               )}
             </div>
           </div>
