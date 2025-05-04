@@ -8,6 +8,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { FaSearch, FaShoppingCart } from 'react-icons/fa';
 import { useCart } from '@/hooks/useCart';
 import { RootState } from '@/redux/store';
+import { logout } from '@/redux/slices/authSlice';
 const menuItems = [
   { name: 'Home', url: '/' },
   { name: 'Menu', url: '/menu' },
@@ -20,6 +21,8 @@ const Navbar = () => {
 
   const [activeMenu, setActiveMenu] = useState('Home');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
   const [currentUser, setCurrentUser] = useState({
     name: '',
     email: '',
@@ -60,6 +63,16 @@ const Navbar = () => {
     dispatch(toggleAuthModal(true));
   };
 
+  const logOut = () => {
+    dispatch(logout());
+    setCurrentUser({
+      name: '',
+      email: '',
+      token: '',
+    });
+    localStorage.removeItem('token');
+    router.push('/');
+  };
   return (
     <div
       className={`w-full ${
@@ -203,7 +216,11 @@ const Navbar = () => {
                   Sign in
                 </button>
               ) : (
-                <div className='relative group w-[145px]'>
+                <div
+                  className='relative '
+                  onMouseEnter={() => setDropdownOpen(true)}
+                  onMouseLeave={() => setDropdownOpen(false)}
+                >
                   <Image
                     src={assets.profile_icon}
                     height={100}
@@ -211,30 +228,41 @@ const Navbar = () => {
                     alt='profile icon'
                     className='w-8 h-8 rounded-full cursor-pointer'
                   />
-                  <ul className='min-w-full absolute hidden group-hover:flex flex-col gap-2 bg-slate-50 p-3 rounded-md border-orange-500 outline-white border-1 right-0 z-index-10'>
-                    <li className='flex flex-row gap-2 items-center justify-start cursor-pointer border-b-2 pb-2'>
-                      {' '}
-                      <Image
-                        src={assets.bag_icon}
-                        height={100}
-                        width={100}
-                        alt='profile icon'
-                        className='w-8 h-8 rounded-full cursor-pointer'
-                      />
-                      <p>Orders</p>
-                    </li>
-                    <li className='flex flex-row gap-2 items-center justify-start cursor-pointer'>
-                      {' '}
-                      <Image
-                        src={assets.logout_icon}
-                        height={100}
-                        width={100}
-                        alt='profile icon'
-                        className='w-8 h-8 rounded-full cursor-pointer'
-                      />
-                      <p>Logout</p>
-                    </li>
-                  </ul>
+                  {dropdownOpen && (
+                    <div
+                      className='absolute w-[145px] left-0 z-10'
+                      onMouseEnter={() => setDropdownOpen(true)}
+                      onMouseLeave={() => setDropdownOpen(false)}
+                    >
+                      <ul className='min-w-full flex flex-col gap-2 bg-slate-50 p-3 rounded-md border-orange-500 outline-white border-1'>
+                        <li className='flex flex-row gap-2 items-center justify-start cursor-pointer border-b-2 pb-2'>
+                          <Image
+                            src={assets.bag_icon}
+                            height={100}
+                            width={100}
+                            alt='profile icon'
+                            className='w-8 h-8 rounded-full cursor-pointer'
+                          />
+                          <p>Orders</p>
+                        </li>
+                        <li className='flex flex-row gap-2 items-center justify-start cursor-pointer'>
+                          <Image
+                            src={assets.logout_icon}
+                            height={100}
+                            width={100}
+                            alt='profile icon'
+                            className='w-8 h-8 rounded-full cursor-pointer'
+                          />
+                          <button
+                            className='cursor-pointer'
+                            onClick={() => logOut()}
+                          >
+                            Logout
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
