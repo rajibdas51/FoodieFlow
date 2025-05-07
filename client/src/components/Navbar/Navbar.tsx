@@ -9,6 +9,7 @@ import { FaSearch, FaShoppingCart } from 'react-icons/fa';
 import { useCart } from '@/hooks/useCart';
 import { RootState } from '@/redux/store';
 import { logout } from '@/redux/slices/authSlice';
+import { toast } from 'react-toastify';
 const menuItems = [
   { name: 'Home', url: '/' },
   { name: 'Menu', url: '/menu' },
@@ -22,7 +23,7 @@ const Navbar = () => {
   const [activeMenu, setActiveMenu] = useState('Home');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-
+  const [token, setToken] = useState('');
   const [currentUser, setCurrentUser] = useState({
     name: '',
     email: '',
@@ -56,6 +57,7 @@ const Navbar = () => {
       setCurrentUser(user);
     }
   }, [user]);
+
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
@@ -70,9 +72,18 @@ const Navbar = () => {
       email: '',
       token: '',
     });
+    toast.success('Logout successful');
     localStorage.removeItem('token');
     router.push('/');
   };
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setToken(token);
+    } else {
+      setToken('');
+    }
+  }, [user, token]);
   return (
     <div
       className={`w-full ${
@@ -203,7 +214,7 @@ const Navbar = () => {
                   isSticky ? 'bg-orange-500' : 'bg-red-600'
                 } rounded-md top-[-8px] left-3`}
               ></div>
-              {!currentUser.token ? (
+              {!token && !currentUser.token ? (
                 <button
                   onClick={openAuthModal}
                   className={`px-4 py-2 font-bold text-gray-800 rounded-[20px] bg-white 
@@ -245,7 +256,10 @@ const Navbar = () => {
                           />
                           <p>Orders</p>
                         </li>
-                        <li className='flex flex-row gap-2 items-center justify-start cursor-pointer'>
+                        <li
+                          onClick={() => logOut()}
+                          className='flex flex-row gap-2 items-center justify-start cursor-pointer'
+                        >
                           <Image
                             src={assets.logout_icon}
                             height={100}
@@ -253,12 +267,7 @@ const Navbar = () => {
                             alt='profile icon'
                             className='w-8 h-8 rounded-full cursor-pointer'
                           />
-                          <button
-                            className='cursor-pointer'
-                            onClick={() => logOut()}
-                          >
-                            Logout
-                          </button>
+                          <button>Logout</button>
                         </li>
                       </ul>
                     </div>
