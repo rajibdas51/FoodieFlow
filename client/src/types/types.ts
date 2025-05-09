@@ -9,5 +9,4 @@ export interface FoodItem {
   numReviews: number;
   countInStock: number;
 }
-
 export type FoodList = FoodItem[];

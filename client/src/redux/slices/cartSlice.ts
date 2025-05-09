@@ -45,8 +45,31 @@ const cartSlice = createSlice({
         localStorage.setItem('cartState', JSON.stringify(state));
       }
     },
+    // Add new function to set exact quantity
+    updateCartQuantity: (
+      state,
+      action: PayloadAction<{ id: string; quantity: number }>
+    ) => {
+      const { id, quantity } = action.payload;
+      if (quantity <= 0) {
+        delete state.cartItems[id];
+      } else {
+        state.cartItems[id] = quantity;
+      }
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('cartState', JSON.stringify(state));
+      }
+    },
+    // Add function to clear the entire cart
+    clearCart: (state) => {
+      state.cartItems = {};
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('cartState', JSON.stringify(state));
+      }
+    },
   },
 });
 
-export const { addToCart, removeFromCart } = cartSlice.actions;
+export const { addToCart, removeFromCart, updateCartQuantity, clearCart } =
+  cartSlice.actions;
 export default cartSlice.reducer;

@@ -10,7 +10,7 @@ interface ErrorResponse {
 
 // Define async thunk for fetching food list
 export const fetchFoodList = createAsyncThunk<
-  FoodList[], // Return type of the payload creator
+  FoodList, // Return type of the payload creator
   void, // First argument to the payload creator
   {
     // ThunkAPI definition
@@ -19,8 +19,8 @@ export const fetchFoodList = createAsyncThunk<
 >('food/fetchFoodList', async (_, { rejectWithValue }) => {
   try {
     const response = await foodApi.getAll();
-    return response.data;
-    console.log('response', response.data);
+
+    return response.data.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
       // Handle Axios errors with proper typing
@@ -37,7 +37,7 @@ export const fetchFoodList = createAsyncThunk<
 });
 
 interface FoodState {
-  foodList: FoodList[];
+  foodList: FoodList;
   loading: boolean;
   error: string | null;
 }
@@ -64,7 +64,7 @@ const foodSlice = createSlice({
       })
       .addCase(
         fetchFoodList.fulfilled,
-        (state, action: PayloadAction<FoodList[]>) => {
+        (state, action: PayloadAction<FoodList>) => {
           state.loading = false;
           state.foodList = action.payload;
         }

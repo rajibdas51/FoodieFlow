@@ -15,9 +15,13 @@ const FoodDisplay: React.FC<FoodDisplayProps> = ({ category }) => {
   );
 
   useEffect(() => {
-    dispatch(fetchFoodList());
-  }, [dispatch]);
+    // Only fetch if the foodList is empty
+    if (foodList.length === 0) {
+      dispatch(fetchFoodList());
+    }
+  }, [dispatch, foodList.length]);
 
+  console.log('Food List:', foodList);
   if (loading) return <div className='text-center'>Loading Food Items...</div>;
   if (error) return <div className='text-center'>Error: {error}</div>;
 
@@ -36,18 +40,21 @@ const FoodDisplay: React.FC<FoodDisplayProps> = ({ category }) => {
 
         {filteredFoods.length === 0 ? (
           <p className='text-center mt-8'>
-            No food items found in this category.
+            {loading ? 'Loading...' : 'No food items found in this category.'}
           </p>
         ) : (
           <div className='grid grid-cols-1 gap-4 mx-auto items-center justify-center sm:grid-cols-2 lg:grid-cols-4 mt-16'>
             {filteredFoods?.map((food, index) => (
               <FoodItem
                 key={food._id || index}
-                id={food._id}
+                _id={food._id}
                 name={food.name}
                 description={food.description}
                 price={food.price}
                 image={food.image}
+                rating={food.rating}
+                numReviews={food.numReviews}
+                countInStock={food.countInStock}
               />
             ))}
           </div>

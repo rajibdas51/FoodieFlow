@@ -1,8 +1,11 @@
 import axios from 'axios';
 
 // Determine the base URL with fallback
-const baseURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
-console.log('Base URL:', baseURL);
+const baseURL =
+  typeof window !== 'undefined'
+    ? process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'
+    : process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+
 // Create axios instance with default configs
 const api = axios.create({
   baseURL,
@@ -15,10 +18,13 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     // If you have auth token, you can add it here
-    // const token = localStorage.getItem('token');
-    // if (token) {
-    //   config.headers.Authorization = `Bearer ${token}`;
-    // }
+    // Only access localStorage in browser environment
+    if (typeof window !== 'undefined') {
+      // const token = localStorage.getItem('token');
+      // if (token) {
+      //   config.headers.Authorization = `Bearer ${token}`;
+      // }
+    }
     return config;
   },
   (error) => Promise.reject(error)
@@ -29,7 +35,7 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     // Handle common errors here
-    // console.error('API Error:', error.response?.data || error.message);
+    console.error('API Error:', error.response?.data || error.message);
     return Promise.reject(error);
   }
 );

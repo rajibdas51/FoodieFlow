@@ -2,6 +2,7 @@
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
+import { FoodItem } from '@/types/types';
 
 export const useCart = () => {
   const { cartItems } = useSelector((state: RootState) => state.cart);
@@ -14,11 +15,11 @@ export const useCart = () => {
 
     // Filter only products in cart for better performance
     const cartProducts = safeList.filter(
-      (item) => cartItems[item._id] && cartItems[item._id] > 0
+      (item: FoodItem) => cartItems[item._id] && cartItems[item._id] > 0
     );
 
     // Calculate cart totals
-    const subtotal = cartProducts.reduce((sum, item) => {
+    const subtotal = cartProducts.reduce((sum, item: FoodItem) => {
       const quantity = cartItems[item._id] || 0;
       return sum + item.price * quantity;
     }, 0);

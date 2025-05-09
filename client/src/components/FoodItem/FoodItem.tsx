@@ -11,6 +11,9 @@ interface FoodItemProps {
   description: string;
   image: string;
   price: number;
+  rating?: number;
+  numReviews?: number;
+  countInStock?: number;
 }
 
 const FoodItem: React.FC<FoodItemProps> = ({
@@ -23,7 +26,7 @@ const FoodItem: React.FC<FoodItemProps> = ({
   const dispatch = useDispatch();
   const cartItems = useSelector((state: RootState) => state.cart.cartItems);
   const itemCount = cartItems[_id] || 0;
-
+  const url = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
   // handleAddToCart function
   const handleAddToCart = () => {
     dispatch(addToCart(_id));
@@ -33,12 +36,13 @@ const FoodItem: React.FC<FoodItemProps> = ({
   const handleRemoveFromCart = () => {
     dispatch(removeFromCart(_id));
   };
+  console.log(url + '/images/' + image);
   return (
     <div className='w-[100%] rounded-[15px] shadow-md transition duration-300 ease-in-out transform hover:scale-105 px-4 md:px-0'>
       <div className='relative'>
         <Image
           className='w-full rounded-t-[20px] md:rounded-t-2xl'
-          src={image}
+          src={url + '/images/' + image}
           alt={name}
           width={500}
           height={300}
