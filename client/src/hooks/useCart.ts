@@ -5,12 +5,15 @@ import { RootState } from '@/redux/store';
 
 export const useCart = () => {
   const { cartItems } = useSelector((state: RootState) => state.cart);
-  const { foodList } = useSelector((state: RootState) => state.food);
+  const { foodList, loading } = useSelector((state: RootState) => state.food);
 
   // Memoized cart calculations
   const cartDetails = useMemo(() => {
+    // Ensure foodList is an array before using filter
+    const safeList = Array.isArray(foodList) ? foodList : [];
+
     // Filter only products in cart for better performance
-    const cartProducts = foodList.filter(
+    const cartProducts = safeList.filter(
       (item) => cartItems[item._id] && cartItems[item._id] > 0
     );
 
@@ -37,8 +40,9 @@ export const useCart = () => {
       itemCount,
       deliveryFee,
       isEmpty: itemCount === 0,
+      isLoading: loading,
     };
-  }, [foodList, cartItems]);
+  }, [foodList, cartItems, loading]);
 
   return cartDetails;
 };

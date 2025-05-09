@@ -1,28 +1,40 @@
 import { FoodList } from '@/types/types';
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { foodApi } from '@/lib/api';
 import axios from 'axios';
 
+// Define error type for better typing
+interface ErrorResponse {
+  message: string;
+}
+
 // Define async thunk for fetching food list
-export const fetchFoodList = createAsyncThunk(
-  'food/fetchFoodList',
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/food/list`
-      );
-      return response.data;
-    } catch (error: unknown) {
-      if (axios.isAxiosError(error)) {
-        return rejectWithValue(
-          error.response?.data?.message ||
-            error.message ||
-            'Failed to fetch food list'
-        );
-      }
-      return rejectWithValue('Failed to fetch food list');
-    }
+export const fetchFoodList = createAsyncThunk<
+  FoodList[], // Return type of the payload creator
+  void, // First argument to the payload creator
+  {
+    // ThunkAPI definition
+    rejectValue: string; // Defined for rejectWithValue
   }
-);
+>('food/fetchFoodList', async (_, { rejectWithValue }) => {
+  try {
+    const response = await foodApi.getAll();
+    return response.data;
+    console.log('response', response.data);
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      // Handle Axios errors with proper typing
+      return rejectWithValue(
+        (error.response?.data as ErrorResponse)?.message ||
+          error.message ||
+          'Failed to fetch food list'
+      );
+    }
+    return rejectWithValue(
+      'An unexpected error occurred while fetching food list'
+    );
+  }
+});
 
 interface FoodState {
   foodList: FoodList[];
@@ -39,7 +51,11 @@ const initialState: FoodState = {
 const foodSlice = createSlice({
   name: 'food',
   initialState,
-  reducers: {},
+  reducers: {
+    clearError: (state) => {
+      state.error = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchFoodList.pending, (state) => {
@@ -55,9 +71,10 @@ const foodSlice = createSlice({
       )
       .addCase(fetchFoodList.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
+        state.error = action.payload || 'Something went wrong';
       });
   },
 });
 
+export const { clearError } = foodSlice.actions;
 export default foodSlice.reducer;
