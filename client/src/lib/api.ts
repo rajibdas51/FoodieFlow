@@ -9,6 +9,7 @@ const baseURL =
 // Create axios instance with default configs
 const api = axios.create({
   baseURL,
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
   },

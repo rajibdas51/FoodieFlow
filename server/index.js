@@ -14,11 +14,10 @@ const port = process.env.PORT || 4000;
 app.use(express.json());
 // Set up CORS with your Vercel frontend URL
 app.use(
-  cors(/*{
-    origin:
-      process.env.CORS_ORIGIN || 'https://your-vercel-frontend-url.vercel.app',
+  cors({
+    origin: process.env.CORS_ORIGIN,
     credentials: true,
-  }*/)
+  })
 );
 
 // db connection
