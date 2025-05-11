@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(
   cors({
     origin:
-      process.env.CLIENT_URL || 'https://your-vercel-frontend-url.vercel.app',
+      process.env.CORS_ORIGIN || 'https://your-vercel-frontend-url.vercel.app',
     credentials: true,
   })
 );
