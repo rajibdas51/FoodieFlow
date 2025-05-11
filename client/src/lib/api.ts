@@ -3,8 +3,8 @@ import axios from 'axios';
 // Determine the base URL with fallback
 const baseURL =
   typeof window !== 'undefined'
-    ? process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'
-    : process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+    ? process.env.NEXT_PUBLIC_API_URL || 'https://foodieflow.onrender.com'
+    : process.env.NEXT_PUBLIC_API_URL || 'https://foodieflow.onrender.com';
 
 // Create axios instance with default configs
 const api = axios.create({

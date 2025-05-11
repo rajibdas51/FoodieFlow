@@ -19,7 +19,7 @@ const LoginPopup: React.FC = () => {
     email: '',
     password: '',
   });
-  const url = process.env.PUBLIC_API_URL || 'http://localhost:4000';
+  const url = process.env.PUBLIC_API_URL || 'https://foodieflow.onrender.com';
 
   const handleCloseModal = () => {
     dispatch(toggleAuthModal(false));
