@@ -26,7 +26,8 @@ const FoodItem: React.FC<FoodItemProps> = ({
   const dispatch = useDispatch();
   const cartItems = useSelector((state: RootState) => state.cart.cartItems);
   const itemCount = cartItems[_id] || 0;
-  const url = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+  const url =
+    process.env.NEXT_PUBLIC_API_URL || 'https://foodieflow.onrender.com';
   // handleAddToCart function
   const handleAddToCart = () => {
     dispatch(addToCart(_id));
