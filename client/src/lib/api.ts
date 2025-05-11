@@ -20,17 +20,16 @@ api.interceptors.request.use(
     // If you have auth token, you can add it here
     // Only access localStorage in browser environment
     if (typeof window !== 'undefined') {
-      // const token = localStorage.getItem('token');
-      // if (token) {
-      //   config.headers.Authorization = `Bearer ${token}`;
-      // }
+      const token = localStorage.getItem('token');
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
     }
     return config;
   },
   (error) => Promise.reject(error)
 );
 
-// Add a response interceptor for common error handling
 api.interceptors.response.use(
   (response) => response,
   (error) => {

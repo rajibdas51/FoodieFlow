@@ -8,11 +8,18 @@ dotenv.config();
 
 // app config
 const app = express();
-const port = 4000;
+const port = process.env.PORT || 4000;
 
 // middleware
 app.use(express.json());
-app.use(cors());
+// Set up CORS with your Vercel frontend URL
+app.use(
+  cors({
+    origin:
+      process.env.CLIENT_URL || 'https://your-vercel-frontend-url.vercel.app',
+    credentials: true,
+  })
+);
 
 // db connection
 connectDB();
@@ -27,5 +34,5 @@ app.get('/', (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server started on http://localhost:${port}`);
+  console.log(`Server started on port: ${port}`);
 });

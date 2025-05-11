@@ -10,10 +10,10 @@ export const useCart = () => {
 
   // Memoized cart calculations
   const cartDetails = useMemo(() => {
-    // Ensure foodList is an array before using filter
+    // Ensure foodList is an array
     const safeList = Array.isArray(foodList) ? foodList : [];
 
-    // Filter only products in cart for better performance
+    // Filter only products in cart
     const cartProducts = safeList.filter(
       (item: FoodItem) => cartItems[item._id] && cartItems[item._id] > 0
     );
