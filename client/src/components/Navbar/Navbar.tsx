@@ -267,7 +267,7 @@ const Navbar = () => {
                             alt='profile icon'
                             className='w-8 h-8 rounded-full cursor-pointer'
                           />
-                          <button>Logout</button>
+                          <button className='cursor-pointer'>Logout</button>
                         </li>
                       </ul>
                     </div>
