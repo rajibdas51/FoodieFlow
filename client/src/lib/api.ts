@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-// Determine the base URL with fallback
+//  the base URL
 const baseURL =
   typeof window !== 'undefined'
     ? process.env.NEXT_PUBLIC_API_URL || 'https://foodieflow.onrender.com'
@@ -15,7 +15,7 @@ const api = axios.create({
   },
 });
 
-// Add request interceptor for auth token (if needed)
+// Add request interceptor for auth token
 api.interceptors.request.use(
   (config) => {
     // If you have auth token, you can add it here
@@ -39,12 +39,5 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
-// Export API methods
-export const foodApi = {
-  getAll: () => api.get('/api/food/list'),
-  getById: (id: string) => api.get(`/api/food/${id}`),
-  // Add more methods as needed
-};
 
 export default api;
