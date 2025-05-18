@@ -12,20 +12,23 @@ import {
 } from '@/redux/slices/cartSlice';
 import { useRouter } from 'next/navigation';
 import { RootState } from '@/redux/store';
+import { fetchFoodList } from '@/redux/slices/foodSlice';
 
-// Create a simple safe version of useCart that handles null values properly
 const useSafeCart = () => {
+  // Safe access to cart items with default empty object
   const { cartItems = {} } = useSelector(
     (state: RootState) => state.cart || {}
   );
+
+  // Safe access to food list with default empty array
   const foodList = useSelector(
     (state: RootState) => state.food?.foodList || []
   );
 
-  // Safely filter and map cart products
-  const cartProducts = foodList
-    .filter((item) => item && cartItems[item._id])
-    .map((item) => item);
+  // Make sure both foodList and cartItems exist before trying to filter
+  const cartProducts = Array.isArray(foodList)
+    ? foodList.filter((item) => item && cartItems[item._id]).map((item) => item)
+    : [];
 
   // Safely calculate totals
   const subtotal = cartProducts.reduce(
@@ -51,22 +54,33 @@ const CartPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
 
+  // Get loading states
+  const { loading: cartLoading } = useSelector(
+    (state: RootState) => state.cart || { loading: false }
+  );
+
+  const { loading: foodLoading } = useSelector(
+    (state: RootState) => state.food || { loading: false }
+  );
+
+  // Combined loading state
+  const loading = cartLoading || foodLoading;
+
   // Use our safe cart hook
   const { cartProducts, cartItems, subtotal, deliveryFee, total, isEmpty } =
     useSafeCart();
-
-  // Get loading state directly
-  const { loading } = useSelector(
-    (state: RootState) => state.cart || { loading: false }
-  );
 
   const isAuthenticated =
     typeof window !== 'undefined' && !!localStorage.getItem('token');
   const url =
     process.env.NEXT_PUBLIC_API_URL || 'https://foodieflow.onrender.com';
 
-  // Fetch cart data from API if user is logged in
+  // Fetch both cart data and food list on component mount
   useEffect(() => {
+    // Always fetch food list, regardless of authentication
+    dispatch(fetchFoodList());
+
+    // Fetch cart if authenticated
     if (isAuthenticated) {
       dispatch(fetchCart());
     }
