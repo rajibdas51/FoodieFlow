@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-//  the base URL
+//  base URL
 const baseURL =
   typeof window !== 'undefined'
     ? process.env.NEXT_PUBLIC_API_URL || 'https://foodieflow.onrender.com'
@@ -18,12 +18,11 @@ const api = axios.create({
 // Add request interceptor for auth token
 api.interceptors.request.use(
   (config) => {
-    // If you have auth token, you can add it here
-    // Only access localStorage in browser environment
+    // Only access localStorage in browser
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem('token');
       if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+        config.headers.token = token;
       }
     }
     return config;
@@ -34,10 +33,32 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    // Handle common errors here
     console.error('API Error:', error.response?.data || error.message);
     return Promise.reject(error);
   }
 );
+
+// Food API methods
+export const foodApi = {
+  getAll: () => api.get('/api/food/list'),
+  getById: (id: string) => api.get(`/api/food/${id}`),
+};
+
+// Cart API methods
+export const cartApi = {
+  getCart: () => api.get('/api/cart/get'),
+  addToCart: (itemId: string) => api.post('/api/cart/add', { itemId }),
+  removeFromCart: (itemId: string) =>
+    api.delete('/api/cart/remove', { data: { itemId } }),
+};
+
+// User API methods
+export const userApi = {
+  login: (credentials: { email: string; password: string }) =>
+    api.post('/api/users/login', credentials),
+  register: (userData: { name: string; email: string; password: string }) =>
+    api.post('/api/users/register', userData),
+  getProfile: () => api.get('/api/users/profile'),
+};
 
 export default api;
