@@ -1,8 +1,13 @@
 import { assets } from '@/assets/frontend_assets/assets';
-import { RootState } from '@/redux/store';
-import { addToCart, removeFromCart } from '@/redux/slices/cartSlice';
+import { RootState, AppDispatch } from '@/redux/store';
+import {
+  addToCart,
+  removeFromCart,
+  addItemToCart,
+  removeItemFromCart,
+} from '@/redux/slices/cartSlice';
 import Image from 'next/image';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 interface FoodItemProps {
@@ -23,21 +28,36 @@ const FoodItem: React.FC<FoodItemProps> = ({
   image,
   price,
 }) => {
-  const dispatch = useDispatch();
-  const cartItems = useSelector((state: RootState) => state.cart.cartItems);
+  const dispatch = useDispatch<AppDispatch>();
+  const { cartItems } = useSelector((state: RootState) => state.cart);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const itemCount = cartItems[_id] || 0;
   const url =
     process.env.NEXT_PUBLIC_API_URL || 'https://foodieflow.onrender.com';
-  // handleAddToCart function
+
+  // check if user is authenticated
+  useEffect(() => {
+    setIsAuthenticated(!!localStorage.getItem('token'));
+  }, []);
+
+  // handleAddToCart - use api if authenticated
   const handleAddToCart = () => {
-    dispatch(addToCart(_id));
+    if (isAuthenticated) {
+      dispatch(addItemToCart(_id));
+    } else {
+      dispatch(addToCart(_id));
+    }
   };
 
-  // handleRemoveFromCart function
+  // handle remove from cart- use api if authenticated
   const handleRemoveFromCart = () => {
-    dispatch(removeFromCart(_id));
+    if (isAuthenticated) {
+      dispatch(removeItemFromCart(_id));
+    } else {
+      dispatch(removeFromCart(_id));
+    }
   };
-  console.log(url + '/images/' + image);
+  //console.log(url + '/images/' + image);
   return (
     <div className='w-[100%] rounded-[15px] shadow-md transition duration-300 ease-in-out transform hover:scale-105 px-4 md:px-0'>
       <div className='relative'>
