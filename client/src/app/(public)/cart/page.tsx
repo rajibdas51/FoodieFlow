@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { FaTimes } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch } from '@/redux/store';
@@ -10,25 +10,54 @@ import {
   fetchCart,
   removeItemFromCart,
 } from '@/redux/slices/cartSlice';
-import { useCart } from '@/hooks/useCart';
 import { RootState } from '@/redux/store';
 import { useRouter } from 'next/navigation';
+
 const CartPage = () => {
   const dispatch = useDispatch<AppDispatch>();
-
   const router = useRouter();
-  const { cartProducts, subtotal, total, deliveryFee, isEmpty } = useCart();
+
+  // Get data directly from Redux state
   const { cartItems, loading } = useSelector((state: RootState) => state.cart);
+  const foodItems = useSelector((state: RootState) => state.food.foodList);
+
   const isAuthenticated =
     typeof window !== 'undefined' && !!localStorage.getItem('token');
   const url =
     process.env.NEXT_PUBLIC_API_URL || 'https://foodieflow.onrender.com';
-  // Fetch cart data from API  if user is logged in
+
+  // Fetch cart data from API if user is logged in
   useEffect(() => {
     if (isAuthenticated) {
       dispatch(fetchCart());
     }
   }, [dispatch, isAuthenticated]);
+
+  // Calculate cart products by combining cart items with food details
+  const cartProducts = useMemo(() => {
+    if (!foodItems || !cartItems) return [];
+
+    return foodItems
+      .filter((item) => cartItems[item._id])
+      .map((item) => ({
+        ...item,
+        quantity: cartItems[item._id] || 0,
+      }));
+  }, [foodItems, cartItems]);
+
+  // Calculate subtotal, delivery fee, and total
+  const subtotal = useMemo(() => {
+    return cartProducts.reduce(
+      (total, item) => total + item.price * (cartItems[item._id] || 0),
+      0
+    );
+  }, [cartProducts, cartItems]);
+
+  const deliveryFee = 5.99; // You can adjust this or make it dynamic
+
+  const total = subtotal + deliveryFee;
+
+  const isEmpty = cartProducts.length === 0;
 
   // Handle item removal - use API if authenticated
   const handleRemoveItem = (itemId: string) => {
@@ -76,14 +105,8 @@ const CartPage = () => {
                   />
                   <p>{item.name}</p>
                   <p>${item.price.toFixed(2)}</p>
-                  <p>{item._id in cartItems ? cartItems[item._id] : 0}</p>
-                  <p>
-                    $
-                    {(
-                      (item._id in cartItems ? cartItems[item._id] : 0) *
-                      item.price
-                    ).toFixed(2)}
-                  </p>
+                  <p>{cartItems[item._id] || 0}</p>
+                  <p>${((cartItems[item._id] || 0) * item.price).toFixed(2)}</p>
                   <p className='text-2l'>
                     <FaTimes
                       onClick={() => handleRemoveItem(item._id)}
