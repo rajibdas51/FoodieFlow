@@ -32,9 +32,9 @@ const loadCartState = (): { cartItems: { [key: string]: number } } => {
 
 // Initial state
 const initialState: CartState = {
-  ...loadCartState(),
   loading: false,
   error: null,
+  ...loadCartState(), // Then spread the loaded state
 };
 
 // fetch cart from api
@@ -43,7 +43,7 @@ export const fetchCart = createAsyncThunk<CartData, void, ThunkApiConfig>(
   async (_, { rejectWithValue }) => {
     try {
       const response = await api.get('/api/cart/get');
-      return response.data.cartData;
+      return response.data.cartData || {}; // Ensure we return an object even if API returns null/undefined
     } catch (error: unknown) {
       return rejectWithValue(getErrorMessage(error));
     }
@@ -51,7 +51,6 @@ export const fetchCart = createAsyncThunk<CartData, void, ThunkApiConfig>(
 );
 
 // add single item to cart
-
 export const addItemToCart = createAsyncThunk<string, string, ThunkApiConfig>(
   'cart/addItem',
   async (itemId, { rejectWithValue }) => {
@@ -65,7 +64,6 @@ export const addItemToCart = createAsyncThunk<string, string, ThunkApiConfig>(
 );
 
 // asynk thunk : remove single item from cart
-
 export const removeItemFromCart = createAsyncThunk<
   string,
   string,
@@ -80,7 +78,6 @@ export const removeItemFromCart = createAsyncThunk<
 });
 
 // the slice
-
 const cartSlice = createSlice({
   name: 'cart',
   initialState,
@@ -88,27 +85,39 @@ const cartSlice = createSlice({
     // local actions for offline
     addToCart: (state, action: PayloadAction<string>) => {
       const itemId = action.payload;
+      // Initialize if not present
+      state.cartItems = state.cartItems || {};
+
       if (!state.cartItems[itemId]) {
         state.cartItems[itemId] = 1;
       } else {
         state.cartItems[itemId] += 1;
       }
-      localStorage.setItem(
-        'cartState',
-        JSON.stringify({ cartItems: state.cartItems })
-      );
+
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(
+          'cartState',
+          JSON.stringify({ cartItems: state.cartItems })
+        );
+      }
     },
     removeFromCart: (state, action: PayloadAction<string>) => {
       const itemId = action.payload;
+      // Initialize if not present
+      state.cartItems = state.cartItems || {};
+
       if (state.cartItems[itemId] === 1) {
         delete state.cartItems[itemId];
       } else if (state.cartItems[itemId] > 1) {
         state.cartItems[itemId] -= 1;
       }
-      localStorage.setItem(
-        'cartState',
-        JSON.stringify({ cartItems: state.cartItems })
-      );
+
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(
+          'cartState',
+          JSON.stringify({ cartItems: state.cartItems })
+        );
+      }
     },
 
     updateCartQuantity: (
@@ -116,35 +125,47 @@ const cartSlice = createSlice({
       action: PayloadAction<{ id: string; quantity: number }>
     ) => {
       const { id, quantity } = action.payload;
+      // Initialize if not present
+      state.cartItems = state.cartItems || {};
+
       if (quantity <= 0) {
         delete state.cartItems[id];
       } else {
         state.cartItems[id] = quantity;
       }
-      localStorage.setItem(
-        'cartState',
-        JSON.stringify({ cartItems: state.cartItems })
-      );
+
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(
+          'cartState',
+          JSON.stringify({ cartItems: state.cartItems })
+        );
+      }
     },
     // clear localstorage cart
     clearCart(state) {
       state.cartItems = {};
       state.error = null;
-      localStorage.setItem(
-        'cartState',
-        JSON.stringify({ cartItems: state.cartItems })
-      );
+
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(
+          'cartState',
+          JSON.stringify({ cartItems: state.cartItems })
+        );
+      }
     },
 
     syncCartWithAPI: (
       state,
       action: PayloadAction<{ [key: string]: number }>
     ) => {
-      state.cartItems = action.payload;
-      localStorage.setItem(
-        'cartState',
-        JSON.stringify({ cartItems: state.cartItems })
-      );
+      state.cartItems = action.payload || {};
+
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(
+          'cartState',
+          JSON.stringify({ cartItems: state.cartItems })
+        );
+      }
     },
   },
   extraReducers: (builder) => {
@@ -155,11 +176,14 @@ const cartSlice = createSlice({
     });
     builder.addCase(fetchCart.fulfilled, (state, action) => {
       state.loading = false;
-      state.cartItems = action.payload;
-      localStorage.setItem(
-        'cartState',
-        JSON.stringify({ cartItems: state.cartItems })
-      );
+      state.cartItems = action.payload || {};
+
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(
+          'cartState',
+          JSON.stringify({ cartItems: state.cartItems })
+        );
+      }
     });
     builder.addCase(fetchCart.rejected, (state, action) => {
       state.loading = false;
@@ -169,29 +193,40 @@ const cartSlice = createSlice({
     // add item handler
     builder.addCase(addItemToCart.fulfilled, (state, action) => {
       const itemId = action.payload;
+      // Initialize if not present
+      state.cartItems = state.cartItems || {};
+
       if (!state.cartItems[itemId]) {
         state.cartItems[itemId] = 1;
       } else {
         state.cartItems[itemId] += 1;
       }
-      localStorage.setItem(
-        'cartState',
-        JSON.stringify({ cartItems: state.cartItems })
-      );
+
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(
+          'cartState',
+          JSON.stringify({ cartItems: state.cartItems })
+        );
+      }
     });
     // remove item handlers
-
     builder.addCase(removeItemFromCart.fulfilled, (state, action) => {
       const itemId = action.payload;
+      // Initialize if not present
+      state.cartItems = state.cartItems || {};
+
       if (state.cartItems[itemId] === 1) {
         delete state.cartItems[itemId];
       } else if (state.cartItems[itemId] > 1) {
         state.cartItems[itemId] -= 1;
       }
-      localStorage.setItem(
-        'cartState',
-        JSON.stringify({ cartItems: state.cartItems })
-      );
+
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(
+          'cartState',
+          JSON.stringify({ cartItems: state.cartItems })
+        );
+      }
     });
   },
 });

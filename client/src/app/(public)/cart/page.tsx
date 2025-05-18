@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaTimes } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch } from '@/redux/store';
@@ -14,77 +14,73 @@ import { useRouter } from 'next/navigation';
 import { RootState } from '@/redux/store';
 import { fetchFoodList } from '@/redux/slices/foodSlice';
 
-const useSafeCart = () => {
-  // Safe access to cart items with default empty object
-  const { cartItems = {} } = useSelector(
-    (state: RootState) => state.cart || {}
-  );
-
-  // Safe access to food list with default empty array
-  const foodList = useSelector(
-    (state: RootState) => state.food?.foodList || []
-  );
-
-  // Make sure both foodList and cartItems exist before trying to filter
-  const cartProducts = Array.isArray(foodList)
-    ? foodList.filter((item) => item && cartItems[item._id]).map((item) => item)
-    : [];
-
-  // Safely calculate totals
-  const subtotal = cartProducts.reduce(
-    (total, item) => total + item.price * (cartItems[item._id] || 0),
-    0
-  );
-
-  const deliveryFee = 5.99;
-  const total = subtotal + deliveryFee;
-  const isEmpty = cartProducts.length === 0;
-
-  return {
-    cartProducts,
-    cartItems,
-    subtotal,
-    deliveryFee,
-    total,
-    isEmpty,
-  };
-};
-
 const CartPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
+  const [isInitialized, setIsInitialized] = useState(false);
 
-  // Get loading states
-  const { loading: cartLoading } = useSelector(
-    (state: RootState) => state.cart || { loading: false }
-  );
+  // Directly access the state with careful null checks
+  const cartItems =
+    useSelector((state: RootState) => state.cart?.cartItems) || {};
+  const foodList =
+    useSelector((state: RootState) => state.food?.foodList) || [];
+  const cartLoading =
+    useSelector((state: RootState) => state.cart?.loading) || false;
+  const foodLoading =
+    useSelector((state: RootState) => state.food?.loading) || false;
 
-  const { loading: foodLoading } = useSelector(
-    (state: RootState) => state.food || { loading: false }
-  );
-
-  // Combined loading state
-  const loading = cartLoading || foodLoading;
-
-  // Use our safe cart hook
-  const { cartProducts, cartItems, subtotal, deliveryFee, total, isEmpty } =
-    useSafeCart();
+  const loading = cartLoading || foodLoading || !isInitialized;
 
   const isAuthenticated =
     typeof window !== 'undefined' && !!localStorage.getItem('token');
   const url =
     process.env.NEXT_PUBLIC_API_URL || 'https://foodieflow.onrender.com';
 
-  // Fetch both cart data and food list on component mount
+  // Fetch both cart data and food list
   useEffect(() => {
-    // Always fetch food list, regardless of authentication
-    dispatch(fetchFoodList());
+    const initializeData = async () => {
+      try {
+        // First fetch food list
+        await dispatch(fetchFoodList()).unwrap();
 
-    // Fetch cart if authenticated
-    if (isAuthenticated) {
-      dispatch(fetchCart());
-    }
+        if (isAuthenticated) {
+          await dispatch(fetchCart()).unwrap();
+        }
+
+        setIsInitialized(true);
+      } catch (error) {
+        console.error('Failed to initialize cart data:', error);
+        setIsInitialized(true);
+      }
+    };
+
+    initializeData();
   }, [dispatch, isAuthenticated]);
+
+  const cartProducts = React.useMemo(() => {
+    if (
+      !isInitialized ||
+      !Array.isArray(foodList) ||
+      Object.keys(cartItems).length === 0
+    ) {
+      return [];
+    }
+
+    // Only include food items that exist in both foodList and cartItems
+    return foodList.filter((item) => item && item._id && cartItems[item._id]);
+  }, [foodList, cartItems, isInitialized]);
+
+  // Safely calculate totals
+  const subtotal = React.useMemo(() => {
+    return cartProducts.reduce(
+      (total, item) => total + item.price * (cartItems[item._id] || 0),
+      0
+    );
+  }, [cartProducts, cartItems]);
+
+  const deliveryFee = 5.99;
+  const total = subtotal + deliveryFee;
+  const isEmpty = cartProducts.length === 0;
 
   // Handle item removal - use API if authenticated
   const handleRemoveItem = (itemId: string) => {
