@@ -1,28 +1,47 @@
 'use client';
 
 import Image from 'next/image';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FaTimes } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
-import { removeFromCart } from '@/redux/slices/cartSlice';
+import type { AppDispatch } from '@/redux/store';
+import {
+  removeFromCart,
+  fetchCart,
+  removeItemFromCart,
+} from '@/redux/slices/cartSlice';
 import { useCart } from '@/hooks/useCart';
 import { RootState } from '@/redux/store';
 import { useRouter } from 'next/navigation';
-
 const CartPage = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
+
   const router = useRouter();
   const { cartProducts, subtotal, total, deliveryFee, isEmpty } = useCart();
-  const { cartItems } = useSelector((state: RootState) => state.cart);
-  // Handle item removal
+  const { cartItems, loading } = useSelector((state: RootState) => state.cart);
+  const isAuthenticated =
+    typeof window !== 'undefined' && !!localStorage.getItem('token');
+  const url =
+    process.env.NEXT_PUBLIC_API_URL || 'https://foodieflow.onrender.com';
+  // Fetch cart data from API  if user is logged in
+  useEffect(() => {
+    if (isAuthenticated) {
+      dispatch(fetchCart());
+    }
+  }, [dispatch, isAuthenticated]);
+
+  // Handle item removal - use API if authenticated
   const handleRemoveItem = (itemId: string) => {
-    dispatch(removeFromCart(itemId));
+    if (isAuthenticated) {
+      dispatch(removeItemFromCart(itemId));
+    } else {
+      dispatch(removeFromCart(itemId));
+    }
   };
 
   return (
     <div className='container mx-auto'>
       <div className='cart mt-[140px]'>
-        {/* Cart Header */}
         <div className='cart-items px-1'>
           <div className='cart-items-title grid grid-cols-6 gap-4 items-center text-center text-gray-600 font-semibold'>
             <p>Items</p>
@@ -35,8 +54,12 @@ const CartPage = () => {
           <br />
           <hr />
 
-          {/* Cart Items or Empty Message */}
-          {isEmpty ? (
+          {/* Loading State */}
+          {loading ? (
+            <div className='text-center py-10'>
+              <p className='text-gray-500'>Loading your cart...</p>
+            </div>
+          ) : isEmpty ? (
             <div className='text-center py-10'>
               <p className='text-gray-500'>Your cart is empty</p>
             </div>
@@ -45,7 +68,7 @@ const CartPage = () => {
               <div key={item._id}>
                 <div className='grid grid-cols-6 gap-4 items-center text-center text-gray-600 font-semibold mb-3 justify-center my-2'>
                   <Image
-                    src={item.image}
+                    src={url + '/images' + item.image}
                     width={100}
                     height={100}
                     alt={item.name}
@@ -97,10 +120,12 @@ const CartPage = () => {
               <hr />
 
               <button
-                className={`text-white bg-orange-500 w-[210px]  py-3 rounded-md  my-4 ${
-                  isEmpty ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+                className={`text-white bg-orange-500 w-[210px] py-3 rounded-md my-4 ${
+                  isEmpty || loading
+                    ? 'opacity-50 cursor-not-allowed'
+                    : 'cursor-pointer'
                 }`}
-                disabled={isEmpty}
+                disabled={isEmpty || loading}
                 onClick={() => router.push('/checkout')}
               >
                 PROCEED TO CHECKOUT
