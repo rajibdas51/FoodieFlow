@@ -1,49 +1,44 @@
-// hooks/useCart.ts
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import { FoodItem } from '@/types/types';
 
 export const useCart = () => {
+  // Get state from Redux
   const { cartItems } = useSelector((state: RootState) => state.cart);
-  const { foodList, loading } = useSelector((state: RootState) => state.food);
+  const foodList = useSelector((state: RootState) => state.food.foodList);
 
-  // Memoized cart calculations
-  const cartDetails = useMemo(() => {
-    // Ensure foodList is an array
-    const safeList = Array.isArray(foodList) ? foodList : [];
+  // Calculate cart products
+  const cartProducts = useMemo(() => {
+    if (!foodList || !cartItems) return [];
 
-    // Filter only products in cart
-    const cartProducts = safeList.filter(
-      (item: FoodItem) => cartItems[item._id] && cartItems[item._id] > 0
-    );
+    return foodList
+      .filter((item) => cartItems[item._id])
+      .map((item) => ({
+        ...item,
+      }));
+  }, [foodList, cartItems]);
 
-    // Calculate cart totals
-    const subtotal = cartProducts.reduce((sum, item: FoodItem) => {
-      const quantity = cartItems[item._id] || 0;
-      return sum + item.price * quantity;
-    }, 0);
+  // Calculate cart totals
+  const subtotal = useMemo(() => {
+    if (!cartProducts || !cartItems) return 0;
 
-    const itemCount = Object.values(cartItems).reduce(
-      (sum, quantity) => sum + quantity,
+    return cartProducts.reduce(
+      (total, item) => total + item.price * (cartItems[item._id] || 0),
       0
     );
+  }, [cartProducts, cartItems]);
 
-    // Set delivery fee to 0 if cart is empty
-    const deliveryFee = itemCount === 0 ? 0 : 2;
+  const deliveryFee = 5.99;
 
-    const total = subtotal + deliveryFee;
+  const total = subtotal + deliveryFee;
 
-    return {
-      cartProducts,
-      subtotal,
-      total,
-      itemCount,
-      deliveryFee,
-      isEmpty: itemCount === 0,
-      isLoading: loading,
-    };
-  }, [foodList, cartItems, loading]);
+  const isEmpty = cartProducts.length === 0;
 
-  return cartDetails;
+  return {
+    cartProducts,
+    subtotal,
+    deliveryFee,
+    total,
+    isEmpty,
+  };
 };

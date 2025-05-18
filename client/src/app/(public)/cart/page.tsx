@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import { FaTimes } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch } from '@/redux/store';
@@ -10,16 +10,55 @@ import {
   fetchCart,
   removeItemFromCart,
 } from '@/redux/slices/cartSlice';
-import { RootState } from '@/redux/store';
 import { useRouter } from 'next/navigation';
+import { RootState } from '@/redux/store';
+
+// Create a simple safe version of useCart that handles null values properly
+const useSafeCart = () => {
+  const { cartItems = {} } = useSelector(
+    (state: RootState) => state.cart || {}
+  );
+  const foodList = useSelector(
+    (state: RootState) => state.food?.foodList || []
+  );
+
+  // Safely filter and map cart products
+  const cartProducts = foodList
+    .filter((item) => item && cartItems[item._id])
+    .map((item) => item);
+
+  // Safely calculate totals
+  const subtotal = cartProducts.reduce(
+    (total, item) => total + item.price * (cartItems[item._id] || 0),
+    0
+  );
+
+  const deliveryFee = 5.99;
+  const total = subtotal + deliveryFee;
+  const isEmpty = cartProducts.length === 0;
+
+  return {
+    cartProducts,
+    cartItems,
+    subtotal,
+    deliveryFee,
+    total,
+    isEmpty,
+  };
+};
 
 const CartPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
 
-  // Get data directly from Redux state
-  const { cartItems, loading } = useSelector((state: RootState) => state.cart);
-  const foodItems = useSelector((state: RootState) => state.food.foodList);
+  // Use our safe cart hook
+  const { cartProducts, cartItems, subtotal, deliveryFee, total, isEmpty } =
+    useSafeCart();
+
+  // Get loading state directly
+  const { loading } = useSelector(
+    (state: RootState) => state.cart || { loading: false }
+  );
 
   const isAuthenticated =
     typeof window !== 'undefined' && !!localStorage.getItem('token');
@@ -32,32 +71,6 @@ const CartPage = () => {
       dispatch(fetchCart());
     }
   }, [dispatch, isAuthenticated]);
-
-  // Calculate cart products by combining cart items with food details
-  const cartProducts = useMemo(() => {
-    if (!foodItems || !cartItems) return [];
-
-    return foodItems
-      .filter((item) => cartItems[item._id])
-      .map((item) => ({
-        ...item,
-        quantity: cartItems[item._id] || 0,
-      }));
-  }, [foodItems, cartItems]);
-
-  // Calculate subtotal, delivery fee, and total
-  const subtotal = useMemo(() => {
-    return cartProducts.reduce(
-      (total, item) => total + item.price * (cartItems[item._id] || 0),
-      0
-    );
-  }, [cartProducts, cartItems]);
-
-  const deliveryFee = 5.99; // You can adjust this or make it dynamic
-
-  const total = subtotal + deliveryFee;
-
-  const isEmpty = cartProducts.length === 0;
 
   // Handle item removal - use API if authenticated
   const handleRemoveItem = (itemId: string) => {
