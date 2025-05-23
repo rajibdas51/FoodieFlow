@@ -1,34 +1,46 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { fetchCart } from '@/redux/slices/cartSlice';
+import {
+  fetchCart,
+  clearCart as clearLocalCart,
+} from '@/redux/slices/cartSlice';
 import type { AppDispatch } from '@/redux/store';
+import { cartApi } from '@/lib/api';
 
-// hook to handle cart synchronization with api
 export const useCartSync = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    const syncCart = () => {
+    const doSync = async () => {
       const token = localStorage.getItem('token');
-      if (token) {
-        dispatch(fetchCart());
+      if (!token) return;
+
+      // 1) grab guest cart
+      const raw = localStorage.getItem('cartState');
+      const guest = raw ? JSON.parse(raw).cartItems : {};
+
+      // 2) push to server if any
+      if (Object.keys(guest).length) {
+        try {
+          await cartApi.syncCart(guest);
+        } catch (err) {
+          console.error('Cart sync failed', err);
+        }
       }
+
+      // 3) clear guest cart
+      localStorage.removeItem('cartState');
+      dispatch(clearLocalCart());
+
+      // 4) fetch merged server cart
+      dispatch(fetchCart());
     };
 
-    // sync cart on initial mount
-    syncCart();
-    const handleStorageChange = (event: StorageEvent) => {
-      if (event.key === 'token' && event.newValue) {
-        syncCart();
-      }
+    doSync();
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === 'token') doSync();
     };
-
-    // add vent listener for login/logout
-    window.addEventListener('storage', handleStorageChange);
-
-    // cleanup
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
   }, [dispatch]);
 };
