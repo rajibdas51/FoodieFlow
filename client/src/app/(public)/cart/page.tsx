@@ -120,7 +120,7 @@ const CartPage = () => {
               <div key={item._id}>
                 <div className='grid grid-cols-6 gap-4 items-center text-center text-gray-600 font-semibold mb-3 justify-center my-2'>
                   <Image
-                    src={url + '/images' + item.image}
+                    src={url + '/images/' + item.image}
                     width={100}
                     height={100}
                     alt={item.name}
