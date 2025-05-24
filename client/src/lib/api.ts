@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-const baseURL =
-  process.env.NEXT_PUBLIC_API_URL || 'https://foodieflow.onrender.com';
+const baseURL = 'https://foodieflow.onrender.com';
 
 const api = axios.create({
   baseURL,
