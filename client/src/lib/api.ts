@@ -1,9 +1,7 @@
 import axios from 'axios';
 
 const baseURL =
-  typeof window !== 'undefined'
-    ? process.env.NEXT_PUBLIC_API_URL || 'https://foodieflow.onrender.com'
-    : process.env.NEXT_PUBLIC_API_URL || 'https://foodieflow.onrender.com';
+  process.env.NEXT_PUBLIC_API_URL || 'https://foodieflow.onrender.com';
 
 const api = axios.create({
   baseURL,
@@ -11,17 +9,27 @@ const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-api.interceptors.request.use((config) => {
-  if (typeof window !== 'undefined') {
+// Attach the Bearer token to every request
+api.interceptors.request.use(
+  (config) => {
+    if (typeof window === 'undefined') return config;
     const token = localStorage.getItem('token');
-    if (token) config.headers.token = token;
-  }
-  return config;
-});
+    if (token && config.headers) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 api.interceptors.response.use(
   (res) => res,
-  (err) => Promise.reject(err)
+  (err) => {
+    if (err.response?.status === 401) {
+      console.warn('Unauthorized – perhaps your session expired.');
+    }
+    return Promise.reject(err);
+  }
 );
 
 export const cartApi = {
