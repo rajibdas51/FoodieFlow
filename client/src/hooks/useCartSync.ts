@@ -6,6 +6,7 @@ import {
 } from '@/redux/slices/cartSlice';
 import type { AppDispatch } from '@/redux/store';
 import { cartApi } from '@/lib/api';
+import { AxiosError } from 'axios'; // Import AxiosError
 
 export const useCartSync = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -15,25 +16,41 @@ export const useCartSync = () => {
       const token = localStorage.getItem('token');
       if (!token) return;
 
-      // 1) grab guest cart
+      // 1) Grab guest cart
       const raw = localStorage.getItem('cartState');
       const guest = raw ? JSON.parse(raw).cartItems : {};
 
-      // 2) push to server if any
+      // 2) Push to server if any
       if (Object.keys(guest).length) {
         try {
           await cartApi.syncCart(guest);
         } catch (err) {
-          console.error('Cart sync failed', err);
+          console.error('Cart sync failed:', err);
+          // Narrow the type of err to AxiosError
+          if (err instanceof AxiosError && err.response?.status === 401) {
+            localStorage.removeItem('token');
+            dispatch(clearLocalCart());
+            window.dispatchEvent(new Event('storage')); // Trigger storage event to re-sync
+          }
         }
       }
 
-      // 3) clear guest cart
+      // 3) Clear guest cart
       localStorage.removeItem('cartState');
       dispatch(clearLocalCart());
 
-      // 4) fetch merged server cart
-      dispatch(fetchCart());
+      // 4) Fetch merged server cart
+      try {
+        await dispatch(fetchCart()).unwrap();
+      } catch (err) {
+        console.error('Failed to fetch cart:', err);
+        // Narrow the type of err to AxiosError (if needed for future logic)
+        if (err instanceof AxiosError && err.response?.status === 401) {
+          localStorage.removeItem('token');
+          dispatch(clearLocalCart());
+          window.dispatchEvent(new Event('storage'));
+        }
+      }
     };
 
     doSync();

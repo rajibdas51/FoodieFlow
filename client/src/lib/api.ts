@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const baseURL = 'https://foodieflow.onrender.com';
+//const baseURL = 'https://foodieflow.onrender.com';
+const baseURL = 'http://localhost:4000';
 
 const api = axios.create({
   baseURL,
@@ -14,7 +15,8 @@ api.interceptors.request.use(
     if (typeof window === 'undefined') return config;
     const token = localStorage.getItem('token');
     if (token && config.headers) {
-      config.headers.Authorization = `Bearer ${token}`;
+      const cleanToken = token.replace(/^"|"$/g, ''); // Remove surrounding quotes if they exist
+      config.headers.Authorization = `Bearer ${cleanToken}`;
     }
     return config;
   },

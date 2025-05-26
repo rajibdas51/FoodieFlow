@@ -126,6 +126,7 @@ const CartPage = () => {
                     alt={item.name}
                     className='rounded-sm'
                   />
+
                   <p>{item.name}</p>
                   <p>${item.price.toFixed(2)}</p>
                   <p>{cartItems[item._id] || 0}</p>
