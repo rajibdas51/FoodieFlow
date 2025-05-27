@@ -4,7 +4,7 @@ const authMiddleware = (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
 
-    console.log('Auth header:', authHeader); // Debug log
+    // console.log('Auth header:', authHeader);
 
     if (!authHeader) {
       return res.status(401).json({
@@ -24,9 +24,6 @@ const authMiddleware = (req, res, next) => {
       });
     }
 
-    console.log('Token:', token); // Debug log
-    console.log('JWT_SECRET exists:', !!process.env.JWT_SECRET); // Debug log
-
     if (!process.env.JWT_SECRET) {
       console.error('JWT_SECRET is not defined in environment variables');
       return res.status(500).json({
@@ -36,7 +33,6 @@ const authMiddleware = (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log('Decoded token:', decoded); // Debug log
 
     req.userId = decoded.id;
     next();

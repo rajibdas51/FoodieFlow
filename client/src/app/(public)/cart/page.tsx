@@ -20,10 +20,11 @@ const CartPage = () => {
   const [isInitialized, setIsInitialized] = useState(false);
 
   // Directly access the state with careful null checks
-  const cartItems =
-    useSelector((state: RootState) => state.cart?.cartItems) || {};
-  const foodList =
-    useSelector((state: RootState) => state.food?.foodList) || [];
+  const cartItemsRaw = useSelector((state: RootState) => state.cart?.cartItems);
+  const cartItems = React.useMemo(() => cartItemsRaw || {}, [cartItemsRaw]);
+  const rawFoodList = useSelector((state: RootState) => state.food?.foodList);
+
+  const foodList = React.useMemo(() => rawFoodList || [], [rawFoodList]);
   const cartLoading =
     useSelector((state: RootState) => state.cart?.loading) || false;
   const foodLoading =
