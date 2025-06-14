@@ -1,5 +1,5 @@
-import orderModel from '../models/orderModel';
-import userModel from '../models/userModel';
+import orderModel from '../models/orderModel.js';
+import userModel from '../models/userModel.js';
 import stripe from 'stripe';
 
 // Placing user order for frontend
